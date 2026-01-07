@@ -1,0 +1,3617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeddingClickz - Book Your Wedding Photography</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <style>
+        :root {
+            --gold: #C9A87C;
+            --gold-light: #E8D5B7;
+            --gold-dark: #8B7355;
+            --cream: #FAF7F2;
+            --charcoal: #2C2C2C;
+            --charcoal-light: #3D3D3D;
+            --white: #FFFFFF;
+            --text-dark: #1A1A1A;
+            --text-light: #6B6B6B;
+            --success: #4CAF50;
+            --error: #E53935;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--cream);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(44, 44, 44, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            padding: 0.5rem 0;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.2);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 50px;
+            width: auto;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            color: var(--white);
+            letter-spacing: 0.02em;
+        }
+
+        .logo h1 span {
+            color: var(--gold);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--white);
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s ease;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--gold);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--charcoal) 0%, var(--charcoal-light) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C9A87C' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 1;
+            padding: 2rem;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: rgba(201, 168, 124, 0.2);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            border-radius: 50px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            color: var(--white);
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .hero h1 span {
+            color: var(--gold);
+            font-style: italic;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--gold-light);
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            font-weight: 300;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(201, 168, 124, 0.3);
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(201, 168, 124, 0.4);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        .scroll-indicator svg {
+            width: 30px;
+            height: 30px;
+            stroke: var(--gold);
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 25px 2rem 0;
+            scroll-margin-top: 25px;
+        }
+
+        /* Section Styling */
+        section {
+            padding: 2.5rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            color: var(--charcoal);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Booking page header text colors for dark background */
+        .page-booking .section-header .section-label {
+            color: var(--gold-light);
+        }
+
+        .page-booking .section-header .section-title {
+            color: var(--white);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .page-booking .section-header .section-subtitle {
+            color: var(--gold-light);
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Inside booking container - white background, use dark text */
+        .booking-container .section-header .section-label {
+            color: var(--gold);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+        }
+
+        .booking-container .section-header .section-title {
+            color: var(--charcoal);
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.9);
+        }
+
+        .booking-container .section-header .section-subtitle {
+            color: var(--text-light);
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+        }
+
+        /* Step Indicator */
+        .steps-container {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .step-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            flex: 1;
+            max-width: 160px;
+        }
+
+        .step-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 18px;
+            left: calc(50% + 22px);
+            width: calc(100% - 44px);
+            height: 2px;
+            background: var(--gold-light);
+        }
+
+        .step-item.active:not(:last-child)::after,
+        .step-item.completed:not(:last-child)::after {
+            background: var(--gold);
+        }
+
+        .step-number {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--white);
+            border: 2px solid var(--gold-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gold-light);
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .step-item.active .step-number,
+        .step-item.completed .step-number {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: var(--white);
+        }
+
+        .step-label {
+            margin-top: 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        .step-item.active .step-label {
+            color: var(--gold-dark);
+            font-weight: 600;
+        }
+
+        /* Booking page step indicator styles for dark background */
+        .page-booking .step-label {
+            color: var(--gold-light);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .page-booking .step-item.active .step-label {
+            color: var(--white);
+            font-weight: 600;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .page-booking .step-number {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Inactive step circles - dark background */
+        .page-booking .step-item:not(.active):not(.completed) .step-number {
+            background: var(--charcoal);
+            border-color: var(--gold-dark);
+            color: var(--gold-light);
+        }
+
+        .page-booking .step-item:not(:last-child)::after {
+            background: rgba(232, 213, 183, 0.5);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .page-booking .step-item.active:not(:last-child)::after,
+        .page-booking .step-item.completed:not(:last-child)::after {
+            background: var(--gold);
+        }
+
+        /* Booking Form Container */
+        .booking-container {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+        }
+
+        .form-section {
+            padding: 2rem;
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Events Grid */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .event-card {
+            position: relative;
+            background: var(--cream);
+            border-radius: 16px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
+        .event-card.selected {
+            border-color: var(--gold);
+            background: linear-gradient(135deg, rgba(201, 168, 124, 0.1), rgba(201, 168, 124, 0.05));
+        }
+
+        .event-card > input[type="checkbox"] {
+            display: none;
+        }
+
+        .event-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.25rem;
+            font-size: 1.5rem;
+        }
+
+        .event-card h3 {
+            font-size: 1.5rem;
+            color: var(--charcoal);
+            margin-bottom: 0.5rem;
+        }
+
+        .event-card p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .event-check {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid var(--gold-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .event-card.selected .event-check {
+            background: var(--gold);
+            border-color: var(--gold);
+        }
+
+        .event-check svg {
+            width: 14px;
+            height: 14px;
+            stroke: var(--white);
+            stroke-width: 3;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .event-card.selected .event-check svg {
+            opacity: 1;
+        }
+
+        /* Selected Date Badge on Event Card */
+        .event-card-date-badge {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            border-radius: 8px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .event-card.has-date .event-card-date-badge {
+            display: flex;
+        }
+
+        .event-card-date-badge span {
+            color: var(--white);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .event-card-date-badge svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--white);
+        }
+
+        /* Date Picker Modal */
+        .date-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .date-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .date-modal {
+            background: var(--white);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .date-modal-overlay.active .date-modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .date-modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(201, 168, 124, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .date-modal-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--charcoal);
+            margin: 0;
+        }
+
+        .date-modal-close {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: var(--cream);
+            border-radius: 50%;
+            font-size: 1.5rem;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .date-modal-close:hover {
+            background: var(--gold-light);
+            color: var(--gold-dark);
+        }
+
+        .date-modal-body {
+            padding: 2rem 1.5rem;
+            text-align: center;
+        }
+
+        .date-modal-desc {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        /* Custom Calendar Styles */
+        .custom-calendar {
+            width: 100%;
+        }
+
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+        }
+
+        .calendar-nav-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: var(--cream);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: var(--charcoal);
+        }
+
+        .calendar-nav-btn:hover {
+            background: var(--gold-light);
+            color: var(--gold-dark);
+        }
+
+        .calendar-nav-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .calendar-month-year {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--charcoal);
+        }
+
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+
+        .calendar-weekday {
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gold-dark);
+            padding: 0.5rem 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            color: var(--charcoal);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .calendar-day:not(.disabled):not(.empty):hover {
+            background: var(--gold-light);
+            color: var(--gold-dark);
+        }
+
+        .calendar-day.today {
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .calendar-day.today::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: var(--gold);
+            border-radius: 50%;
+        }
+
+        .calendar-day.selected {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        .calendar-day.selected::after {
+            display: none;
+        }
+
+        .calendar-day.disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .calendar-day.empty {
+            cursor: default;
+        }
+
+        .calendar-day.other-month {
+            color: #bbb;
+        }
+
+        .calendar-selected-display {
+            margin-top: 1.25rem;
+            padding: 1rem;
+            background: var(--cream);
+            border-radius: 12px;
+            text-align: center;
+            border: 2px dashed var(--gold-light);
+            transition: all 0.3s ease;
+        }
+
+        .calendar-selected-display.has-date {
+            border-style: solid;
+            border-color: var(--gold);
+            background: rgba(201, 168, 124, 0.1);
+        }
+
+        .calendar-selected-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .calendar-selected-date {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            color: var(--charcoal);
+            font-weight: 600;
+        }
+
+        .calendar-selected-date.placeholder {
+            color: #aaa;
+            font-style: italic;
+        }
+
+        .date-modal-footer {
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid rgba(201, 168, 124, 0.2);
+            display: flex;
+            gap: 1rem;
+        }
+
+        .date-modal-btn {
+            flex: 1;
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .date-modal-btn.cancel {
+            background: var(--cream);
+            color: var(--text-light);
+        }
+
+        .date-modal-btn.cancel:hover {
+            background: #e8e0d5;
+        }
+
+        .date-modal-btn.remove {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .date-modal-btn.remove:hover {
+            background: #fecaca;
+        }
+
+        .date-modal-btn.confirm {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--white);
+        }
+
+        .date-modal-btn.confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(201, 168, 124, 0.4);
+        }
+
+        .date-modal-btn.confirm:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Step 2 Layout with Floating Summary */
+        .step2-layout {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .services-main {
+            min-width: 0;
+        }
+
+        /* Floating Price Summary Card */
+        .price-summary-card {
+            position: sticky;
+            top: 90px;
+            background: linear-gradient(135deg, var(--charcoal), #1a1a1a);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+            z-index: 100;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .price-summary-card::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .price-summary-card::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2px;
+        }
+
+        .price-summary-card::-webkit-scrollbar-thumb {
+            background: var(--gold-dark);
+            border-radius: 2px;
+        }
+
+        .price-summary-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .price-summary-header svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--gold);
+        }
+
+        .price-summary-header h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            color: var(--white);
+            margin: 0;
+        }
+
+        .price-summary-count {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 1rem;
+        }
+
+        .price-summary-count span {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .price-summary-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .price-summary-breakdown::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .price-summary-breakdown::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2px;
+        }
+
+        .price-summary-breakdown::-webkit-scrollbar-thumb {
+            background: var(--gold-dark);
+            border-radius: 2px;
+        }
+
+        .price-breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .price-breakdown-row:last-child {
+            border-bottom: none;
+        }
+
+        .price-breakdown-row .event-name {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .price-breakdown-row .event-price {
+            font-size: 0.9rem;
+            color: var(--gold-light);
+            font-weight: 600;
+        }
+
+        .price-summary-empty {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.85rem;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        .price-summary-total {
+            padding-top: 1rem;
+            border-top: 2px solid var(--gold);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price-summary-total .total-label {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .price-summary-total .total-amount {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .price-summary-gst {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-align: right;
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 1024px) {
+            .step2-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .price-summary-card {
+                position: relative;
+                top: 0;
+                margin-top: 2rem;
+            }
+        }
+
+        /* Services Section */
+        .services-wrapper {
+            display: none;
+        }
+
+        .services-wrapper.active {
+            display: block;
+        }
+
+        .event-services-block {
+            background: var(--cream);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .event-services-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(201, 168, 124, 0.3);
+        }
+
+        .event-services-header h3 {
+            font-size: 1.5rem;
+            color: var(--charcoal);
+        }
+
+        .event-date-picker {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .event-date-picker label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .event-date-picker input[type="date"] {
+            padding: 0.5rem 0.75rem;
+            border: 2px solid var(--gold-light);
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            background: var(--white);
+            color: var(--charcoal);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .event-date-picker input[type="date"]:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .event-date-picker input[type="date"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+            filter: opacity(0.6);
+        }
+
+        .event-date-display {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, rgba(201, 168, 124, 0.15), rgba(201, 168, 124, 0.08));
+            border-radius: 8px;
+            border: 1px solid var(--gold-light);
+        }
+
+        .event-date-display .date-label {
+            font-size: 1rem;
+        }
+
+        .event-date-display .date-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--gold-dark);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .service-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem;
+            background: var(--white);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .service-item:hover {
+            border-color: var(--gold-light);
+        }
+
+        .service-item.selected {
+            border-color: var(--gold);
+            background: linear-gradient(135deg, rgba(201, 168, 124, 0.1), rgba(201, 168, 124, 0.05));
+        }
+
+        .service-item input {
+            display: none;
+        }
+
+        .service-checkbox {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            border: 2px solid var(--gold-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .service-item.selected .service-checkbox {
+            background: var(--gold);
+            border-color: var(--gold);
+        }
+
+        .service-checkbox svg {
+            width: 12px;
+            height: 12px;
+            stroke: var(--white);
+            stroke-width: 3;
+            opacity: 0;
+        }
+
+        .service-item.selected .service-checkbox svg {
+            opacity: 1;
+        }
+
+        .service-info {
+            flex: 1;
+        }
+
+        .service-info h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 0.25rem;
+        }
+
+        .service-info p {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .service-price {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gold-dark);
+        }
+
+        /* Price Summary */
+        .price-summary {
+            background: linear-gradient(135deg, var(--charcoal), var(--charcoal-light));
+            border-radius: 16px;
+            padding: 2rem;
+            color: var(--white);
+            position: sticky;
+            top: 120px;
+        }
+
+        .price-summary h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .price-items {
+            margin-bottom: 1.5rem;
+        }
+
+        .price-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .price-item-name {
+            font-size: 0.9rem;
+            color: var(--gold-light);
+        }
+
+        .price-item-value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .price-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 2px solid var(--gold);
+        }
+
+        .price-total-label {
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .price-total-value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--gold);
+        }
+
+        /* Customer Details Form */
+        .details-form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            letter-spacing: 0.05em;
+        }
+
+        .form-group label span {
+            color: var(--error);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 1rem 1.25rem;
+            border: 2px solid var(--gold-light);
+            border-radius: 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--cream);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: var(--white);
+        }
+
+        .form-group input.error,
+        .form-group textarea.error {
+            border-color: var(--error);
+            background: #FFF5F5;
+        }
+
+        .form-group input.error:focus,
+        .form-group textarea.error:focus {
+            border-color: var(--error);
+            box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.1);
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            display: none;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .error-message.show {
+            display: flex;
+        }
+
+        .error-message svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Buttons */
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(201, 168, 124, 0.2);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--white);
+            box-shadow: 0 10px 30px rgba(201, 168, 124, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(201, 168, 124, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--charcoal);
+            border: 2px solid var(--gold-light);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--gold);
+            background: rgba(201, 168, 124, 0.1);
+        }
+
+        .btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .btn svg.spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Services Preview for Step 3 */
+        .services-preview {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .services-preview-card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+        }
+
+        .services-preview-header {
+            background: linear-gradient(135deg, var(--charcoal), var(--charcoal-light));
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .services-preview-event {
+            color: var(--white);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .services-preview-date {
+            color: var(--gold);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .services-preview-list {
+            padding: 1rem 1.5rem;
+        }
+
+        .services-preview-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.875rem 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .services-preview-item:last-child {
+            border-bottom: none;
+        }
+
+        .services-preview-item-name {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        .services-preview-item-name svg {
+            width: 18px;
+            height: 18px;
+            color: var(--gold);
+        }
+
+        .services-preview-item-price {
+            color: var(--charcoal);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .services-preview-subtotal {
+            background: var(--bg-light);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .services-preview-subtotal-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .services-preview-subtotal-value {
+            color: var(--charcoal);
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        /* Total Card */
+        .services-total-card {
+            background: linear-gradient(135deg, var(--charcoal), var(--charcoal-light));
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--white);
+        }
+
+        .services-total-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .services-total-label {
+            font-size: 0.85rem;
+            color: var(--gold-light);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .services-total-breakdown {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .services-total-amount {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        /* Invoice Preview */
+        .invoice-preview {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .invoice-header {
+            background: linear-gradient(135deg, var(--charcoal), var(--charcoal-light));
+            padding: 3rem;
+            color: var(--white);
+        }
+
+        .invoice-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+        }
+
+        .invoice-logo h2 {
+            font-size: 2rem;
+            color: var(--white);
+        }
+
+        .invoice-logo h2 span {
+            color: var(--gold);
+        }
+
+        .invoice-badge {
+            padding: 0.5rem 1.5rem;
+            background: var(--gold);
+            color: var(--charcoal);
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            border-radius: 50px;
+        }
+
+        .invoice-meta {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .invoice-meta-item label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--gold-light);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .invoice-meta-item span {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .invoice-body {
+            padding: 3rem;
+        }
+
+        .invoice-parties {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .invoice-party h4 {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 1rem;
+        }
+
+        .invoice-party p {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            line-height: 1.8;
+        }
+
+        .invoice-party strong {
+            font-size: 1.1rem;
+            color: var(--charcoal);
+        }
+
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+        }
+
+        .invoice-table thead {
+            background: var(--cream);
+        }
+
+        .invoice-table th {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--gold-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .invoice-table th:last-child {
+            text-align: right;
+        }
+
+        .invoice-table th:nth-child(2) {
+            text-align: center;
+            width: 120px;
+        }
+
+        .invoice-table td {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(201, 168, 124, 0.2);
+        }
+
+        .invoice-table td:last-child {
+            text-align: right;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--charcoal);
+        }
+
+        .invoice-table td:nth-child(2) {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--gold-dark);
+        }
+
+        .invoice-table .event-name {
+            font-weight: 600;
+            color: var(--charcoal);
+        }
+
+        .invoice-table .service-name {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            padding-left: 1.5rem;
+        }
+
+        .invoice-totals {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .invoice-totals-box {
+            width: 300px;
+        }
+
+        .invoice-totals-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(201, 168, 124, 0.2);
+        }
+
+        .invoice-totals-row span {
+            font-size: 0.95rem;
+        }
+
+        .invoice-totals-row.total {
+            border-bottom: none;
+            padding-top: 1rem;
+            border-top: 2px solid var(--gold);
+        }
+
+        .invoice-totals-row.total span {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .invoice-totals-row.total span:last-child {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.75rem;
+            color: var(--gold-dark);
+        }
+
+        .invoice-footer {
+            background: var(--cream);
+            padding: 2rem 3rem;
+        }
+
+        .invoice-footer h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 1rem;
+        }
+
+        .invoice-footer ul {
+            list-style: none;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        .invoice-footer ul li::before {
+            content: '•';
+            color: var(--gold);
+            margin-right: 0.5rem;
+        }
+
+        /* Success Message */
+        .success-container {
+            text-align: center;
+            padding: 4rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+        }
+
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--success), #45a049);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            animation: scaleIn 0.5s ease;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+
+        .success-icon svg {
+            width: 50px;
+            height: 50px;
+            stroke: var(--white);
+            stroke-width: 3;
+        }
+
+        .success-container h2 {
+            font-size: 2.5rem;
+            color: var(--charcoal);
+            margin-bottom: 1rem;
+        }
+
+        .success-container p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            max-width: 500px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--white);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Two Column Layout for Review */
+        .review-layout {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 2rem;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background: var(--charcoal);
+            color: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            background: var(--success);
+        }
+
+        .toast.error {
+            background: var(--error);
+        }
+
+        /* Page Routing System */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Home page hero needs min-height */
+        .page-home .hero {
+            min-height: 100vh;
+        }
+
+        /* Booking page - no hero, start from top */
+        .page-booking {
+            padding-top: 80px;
+            background-image: url('slider_1.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+        }
+
+        .page-booking main {
+            padding-top: 2rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--charcoal);
+            color: var(--white);
+            padding: 4rem 2rem 2rem;
+            margin-top: 5rem;
+            display: none;
+        }
+
+        footer.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-brand h3 span {
+            color: var(--gold);
+        }
+
+        .footer-brand p {
+            color: var(--gold-light);
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        .footer-links h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--gold-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .footer-logo img {
+            filter: brightness(1.1);
+            transition: transform 0.3s ease;
+        }
+
+        .footer-logo img:hover {
+            transform: scale(1.05);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: var(--gold-light);
+            font-size: 0.85rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .review-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .price-summary {
+                position: static;
+            }
+
+            .invoice-meta {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 0 1rem;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            .steps-container {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .step-item:not(:last-child)::after {
+                display: none;
+            }
+
+            .details-form {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+
+            .invoice-header-top {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .invoice-meta {
+                grid-template-columns: 1fr;
+            }
+
+            .invoice-parties {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .btn-container {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <div class="header-container">
+            <a href="/" class="logo" id="logoLink">
+                <img src="logo.png" alt="WeddingClickz" class="logo-img">
+                <h1>Wedding<span>Clickz</span></h1>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="#footer" id="contactLink">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- HOME PAGE -->
+    <div class="page page-home active" id="pageHome">
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-badge">Premium Wedding Photography</div>
+                <h1>Book Your <span>Perfect</span><br>Wedding Coverage</h1>
+                <p>Select your events, choose your services, and receive a professional invoice instantly. Let us capture every precious moment of your special day.</p>
+                <a href="#" class="hero-cta" id="startBookingBtn">
+                    Start Booking
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- BOOKING PAGE -->
+    <div class="page page-booking" id="pageBooking">
+        <main id="booking">
+        <section>
+            <div class="section-header">
+                <span class="section-label">Simple Booking Process</span>
+                <h2 class="section-title">Create Your Package</h2>
+                <p class="section-subtitle">Follow the steps below to customize your wedding photography package and receive an instant quote.</p>
+            </div>
+
+            <!-- Step Indicator -->
+            <div class="steps-container">
+                <div class="step-item active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Select Events</div>
+                </div>
+                <div class="step-item" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Choose Services</div>
+                </div>
+                <div class="step-item" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Review & Confirm</div>
+                </div>
+            </div>
+
+            <!-- Booking Container -->
+            <div class="booking-container">
+                <!-- Step 1: Event Selection -->
+                <div class="form-section active" id="step1">
+                    <div class="section-header" style="margin-bottom: 2rem;">
+                        <h3 class="section-title" style="font-size: 1.75rem;">Select Your Wedding Events</h3>
+                        <p class="section-subtitle">Choose one or more events you'd like us to cover.</p>
+                    </div>
+                    
+                    <div class="events-grid" id="eventsGrid">
+                        <!-- Events will be loaded dynamically from API -->
+                        <div class="loading-placeholder" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                            <div class="spinner" style="margin: 0 auto; border-color: var(--gold); border-top-color: transparent;"></div>
+                            <p style="margin-top: 1rem; color: var(--text-light);">Loading events...</p>
+                        </div>
+                    </div>
+
+                    <div class="btn-container">
+                        <div></div>
+                        <button class="btn btn-primary" id="toStep2" disabled>
+                            Continue to Services
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Service Selection -->
+                <div class="form-section" id="step2">
+                    <div class="section-header" style="margin-bottom: 2rem;">
+                        <h3 class="section-title" style="font-size: 1.75rem;">Select Services for Each Event</h3>
+                        <p class="section-subtitle">Choose the photography and videography services you need for each event.</p>
+                    </div>
+                    
+                    <div class="step2-layout">
+                        <div class="services-main">
+                            <div id="servicesContainer">
+                                <!-- Dynamic services will be inserted here -->
+                            </div>
+
+                            <div class="btn-container">
+                                <button class="btn btn-secondary" id="backToStep1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/>
+                                    </svg>
+                                    Back to Events
+                                </button>
+                                <button class="btn btn-primary" id="toStep3" disabled>
+                                    Review & Confirm
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Floating Price Summary Card -->
+                        <div class="price-summary-card" id="priceSummaryCard">
+                            <div class="price-summary-header">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                </svg>
+                                <h4>Price Summary</h4>
+                            </div>
+                            <div class="price-summary-count" id="summaryItemCount">
+                                Select services to see pricing
+                            </div>
+                            <div class="price-summary-breakdown" id="summaryBreakdown">
+                                <span class="price-summary-empty">No services selected yet</span>
+                            </div>
+                            <div class="price-summary-total">
+                                <span class="total-label">Total</span>
+                                <span class="total-amount" id="summaryTotalAmount">₹0</span>
+                            </div>
+                            <div class="price-summary-gst">+ 18% GST applicable</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Review & Invoice -->
+                <div class="form-section" id="step3">
+                    <div class="section-header" style="margin-bottom: 2rem;">
+                        <h3 class="section-title" style="font-size: 1.75rem;">Review Your Booking</h3>
+                        <p class="section-subtitle">Please review your selections, enter your email, and download your invoice.</p>
+                    </div>
+
+                    <!-- Email Input -->
+                    <div class="details-form" style="margin-bottom: 2rem;">
+                        <div class="form-group full-width">
+                            <label>Email Address <span>*</span></label>
+                            <input type="email" id="clientEmail" placeholder="your@email.com" required>
+                            <div class="error-message" id="clientEmailError">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span>Please enter a valid email address</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="services-preview" id="servicesPreview">
+                        <!-- Services preview will be generated here -->
+                    </div>
+
+                    <div class="btn-container">
+                        <button class="btn btn-secondary" id="backToStep2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/>
+                            </svg>
+                            Back to Services
+                        </button>
+                        <button class="btn btn-primary" id="generateInvoice">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            Download Invoice PDF
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Success State -->
+                <div class="form-section" id="successStep">
+                    <div class="success-container">
+                        <div class="success-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <h2>Quote Sent Successfully!</h2>
+                        <p>Your invoice has been generated and downloaded. We've also sent a copy to <strong id="confirmEmailDisplay"></strong>. Our team will get in touch with you shortly.</p>
+                        <button class="btn btn-primary" id="startOver">
+                            Start New Booking
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    </div>
+
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>Wedding<span>Clickz</span></h3>
+                <p>At WeddingClickz Photography, we believe that every wedding is a story waiting to be told—authentically, artistically, and with heart.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Contact</h4>
+                <ul>
+                    <li><a href="tel:+919740222927">+91 97402 22927</a></li>
+                    <li><a href="mailto:info.weddingclickz@gmail.com">info.weddingclickz@gmail.com</a></li>
+                    <li><a href="https://maps.google.com/?q=2nd+floor,+47th+Cross+Rd,+5th+Block,+TMC+Layout,+1st+Phase,+Jayanagar,+Bengaluru,+Karnataka+560041" target="_blank">2nd floor, 47th Cross Rd, 5th Block,<br>TMC Layout, 1st Phase, Jayanagar,<br>Bengaluru, Karnataka 560041</a></li>
+                </ul>
+            </div>
+            <div class="footer-logo">
+                <a href="https://www.weddingclickz.com/" target="_blank">
+                    <img src="logo.png" alt="WeddingClickz" style="height: 120px; width: auto;">
+                </a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 WeddingClickz Photography. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Date Picker Modal -->
+    <div class="date-modal-overlay" id="dateModalOverlay">
+        <div class="date-modal">
+            <div class="date-modal-header">
+                <h3 id="dateModalTitle">Select Date</h3>
+                <button class="date-modal-close" id="dateModalClose">&times;</button>
+            </div>
+            <div class="date-modal-body">
+                <div class="custom-calendar" id="customCalendar">
+                    <div class="calendar-nav">
+                        <button type="button" class="calendar-nav-btn" id="calendarPrev">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                        </button>
+                        <span class="calendar-month-year" id="calendarMonthYear">January 2025</span>
+                        <button type="button" class="calendar-nav-btn" id="calendarNext">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="calendar-weekdays">
+                        <span class="calendar-weekday">Sun</span>
+                        <span class="calendar-weekday">Mon</span>
+                        <span class="calendar-weekday">Tue</span>
+                        <span class="calendar-weekday">Wed</span>
+                        <span class="calendar-weekday">Thu</span>
+                        <span class="calendar-weekday">Fri</span>
+                        <span class="calendar-weekday">Sat</span>
+                    </div>
+                    <div class="calendar-days" id="calendarDays"></div>
+                    <div class="calendar-selected-display" id="calendarSelectedDisplay">
+                        <div class="calendar-selected-label">Selected Date</div>
+                        <div class="calendar-selected-date placeholder" id="calendarSelectedDate">Select a date</div>
+                    </div>
+                </div>
+                <input type="hidden" id="dateModalInput">
+            </div>
+            <div class="date-modal-footer">
+                <button class="date-modal-btn cancel" id="dateModalCancel">Cancel</button>
+                <button class="date-modal-btn remove" id="dateModalRemove" style="display: none;">Remove Event</button>
+                <button class="date-modal-btn confirm" id="dateModalConfirm">Confirm Date</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span id="toastMessage"></span>
+    </div>
+
+    <script>
+        // ============================================
+        // CONFIGURATION - Backend API URL
+        // ============================================
+        const API_BASE = 'https://api.edastra.in';
+        
+        // Data loaded from API
+        let eventsData = [];
+        let eventNames = {};
+
+        // State Management
+        let selectedEvents = [];
+        let selectedServices = {};
+        let eventDates = {};
+        let customerDetails = {};
+
+        // DOM Elements
+        let eventCards;
+        const stepItems = document.querySelectorAll('.step-item');
+        const formSections = document.querySelectorAll('.form-section');
+
+        // Page Routing
+        function showPage(pageName) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            const targetPage = document.getElementById('page' + pageName.charAt(0).toUpperCase() + pageName.slice(1));
+            if (targetPage) {
+                targetPage.classList.add('active');
+                window.scrollTo(0, 0);
+                // Update URL hash
+                history.pushState(null, '', pageName === 'home' ? '/' : '#' + pageName);
+            }
+        }
+
+        function initPageRouting() {
+            // Check URL hash on load
+            const hash = window.location.hash.replace('#', '');
+            if (hash === 'booking') {
+                showPage('booking');
+            }
+
+            // Start Booking button
+            document.getElementById('startBookingBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                showPage('booking');
+            });
+
+            // Handle browser back/forward
+            window.addEventListener('popstate', () => {
+                const hash = window.location.hash.replace('#', '');
+                if (hash === 'booking') {
+                    showPage('booking');
+                } else {
+                    showPage('home');
+                }
+            });
+
+            // Logo click goes to home
+            document.getElementById('logoLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                showPage('home');
+            });
+
+            // Contact link - show footer and scroll to it
+            document.getElementById('contactLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                const footer = document.getElementById('footer');
+                footer.classList.add('show');
+                setTimeout(() => {
+                    footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            });
+
+            // Hide footer when scrolling up significantly
+            let lastScrollY = window.scrollY;
+            let scrollUpDistance = 0;
+            const scrollThreshold = 180; // Minimum scroll up distance to hide footer
+            
+            window.addEventListener('scroll', () => {
+                const footer = document.getElementById('footer');
+                if (!footer.classList.contains('show')) {
+                    scrollUpDistance = 0;
+                    lastScrollY = window.scrollY;
+                    return;
+                }
+                
+                const currentScrollY = window.scrollY;
+                const footerTop = footer.getBoundingClientRect().top + window.scrollY;
+                
+                // Track cumulative scroll up distance
+                if (currentScrollY < lastScrollY) {
+                    scrollUpDistance += (lastScrollY - currentScrollY);
+                } else {
+                    scrollUpDistance = 0; // Reset if scrolling down
+                }
+                
+                // Hide footer only after significant scroll up and not near footer
+                if (scrollUpDistance > scrollThreshold && currentScrollY < footerTop - 200) {
+                    footer.classList.remove('show');
+                    scrollUpDistance = 0;
+                }
+                
+                lastScrollY = currentScrollY;
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            initPageRouting();
+            await loadEventsFromAPI();
+            initNavigationHandlers();
+            initScrollEffects();
+        });
+
+        // Load events and pricing from API
+        async function loadEventsFromAPI() {
+            try {
+                const response = await fetch(`${API_BASE}/api/events`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    eventsData = result.data;
+                    renderEvents();
+                    initEventHandlers();
+                } else {
+                    showToast('Failed to load events', 'error');
+                    renderFallbackEvents();
+                }
+            } catch (error) {
+                console.error('Error loading events:', error);
+                showToast('Failed to load events from server', 'error');
+                renderFallbackEvents();
+            }
+        }
+
+        // Render events from API data
+        function renderEvents() {
+            const eventsGrid = document.getElementById('eventsGrid');
+            
+            if (eventsData.length === 0) {
+                eventsGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                        <p style="color: var(--text-light);">No events available at the moment.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Build eventNames mapping from API data
+            eventsData.forEach(event => {
+                eventNames[event.slug] = event.name;
+            });
+
+            eventsGrid.innerHTML = eventsData.map(event => `
+                <div class="event-card" data-event="${event.slug}" data-name="${event.name}">
+                    <input type="checkbox" name="event" value="${event.slug}">
+                    <div class="event-icon">${event.icon || '📷'}</div>
+                    <h3>${event.name}</h3>
+                    <p>${event.description || ''}</p>
+                    <div class="event-check">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
+                    <div class="event-card-date-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        <span class="date-display"></span>
+                    </div>
+                </div>
+            `).join('');
+
+            // Update eventCards reference
+            eventCards = document.querySelectorAll('.event-card');
+        }
+
+        // Fallback if API fails
+        function renderFallbackEvents() {
+            const fallbackEvents = [
+                { slug: 'wedding', name: 'Wedding', description: 'Your special day ceremony', icon: '💍' }
+            ];
+            
+            eventsData = fallbackEvents.map(e => ({ ...e, services: [] }));
+            renderEvents();
+            initEventHandlers();
+        }
+
+        // Current card being edited in the modal
+        let currentEditingCard = null;
+        
+        // Custom Calendar State
+        let calendarCurrentMonth = new Date().getMonth();
+        let calendarCurrentYear = new Date().getFullYear();
+        let calendarSelectedDate = null;
+
+        // Event Selection Handlers
+        function initEventHandlers() {
+            eventCards = document.querySelectorAll('.event-card');
+            eventCards.forEach(card => {
+                card.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const eventSlug = card.dataset.event;
+                    const eventName = card.dataset.name;
+                    
+                    if (card.classList.contains('selected')) {
+                        // Already selected - open modal to edit date
+                        openDateModal(card, eventSlug, eventName);
+                    } else {
+                        // Show modal to select date
+                        openDateModal(card, eventSlug, eventName);
+                    }
+                });
+            });
+
+            // Initialize modal handlers
+            initDateModalHandlers();
+        }
+
+        // Date Modal Functions
+        function openDateModal(card, eventSlug, eventName) {
+            currentEditingCard = card;
+            const modal = document.getElementById('dateModalOverlay');
+            const modalTitle = document.getElementById('dateModalTitle');
+            const modalInput = document.getElementById('dateModalInput');
+            const confirmBtn = document.getElementById('dateModalConfirm');
+            const removeBtn = document.getElementById('dateModalRemove');
+            
+            modalTitle.textContent = eventName;
+            
+            // Show/hide remove button based on whether event is already selected
+            const isEditing = card.classList.contains('selected');
+            removeBtn.style.display = isEditing ? 'block' : 'none';
+            
+            // Initialize calendar with existing date or today
+            if (eventDates[eventSlug]) {
+                const existingDate = new Date(eventDates[eventSlug]);
+                calendarCurrentMonth = existingDate.getMonth();
+                calendarCurrentYear = existingDate.getFullYear();
+                calendarSelectedDate = eventDates[eventSlug];
+                modalInput.value = eventDates[eventSlug];
+            } else {
+                const today = new Date();
+                calendarCurrentMonth = today.getMonth();
+                calendarCurrentYear = today.getFullYear();
+                calendarSelectedDate = null;
+                modalInput.value = '';
+            }
+            
+            confirmBtn.disabled = !calendarSelectedDate;
+            renderCalendar();
+            updateSelectedDateDisplay();
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Render custom calendar
+        function renderCalendar() {
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                               'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            // Update month/year display
+            document.getElementById('calendarMonthYear').textContent = 
+                `${monthNames[calendarCurrentMonth]} ${calendarCurrentYear}`;
+            
+            const calendarDays = document.getElementById('calendarDays');
+            calendarDays.innerHTML = '';
+            
+            // Get first day of month and total days
+            const firstDay = new Date(calendarCurrentYear, calendarCurrentMonth, 1).getDay();
+            const daysInMonth = new Date(calendarCurrentYear, calendarCurrentMonth + 1, 0).getDate();
+            
+            // Tomorrow for comparison (only allow dates from tomorrow onwards)
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            // Add empty cells for days before first day
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDay = document.createElement('button');
+                emptyDay.className = 'calendar-day empty';
+                emptyDay.type = 'button';
+                calendarDays.appendChild(emptyDay);
+            }
+            
+            // Add days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayBtn = document.createElement('button');
+                dayBtn.className = 'calendar-day';
+                dayBtn.type = 'button';
+                dayBtn.textContent = day;
+                
+                const dateObj = new Date(calendarCurrentYear, calendarCurrentMonth, day);
+                dateObj.setHours(0, 0, 0, 0);
+                const dateString = formatDateToISO(dateObj);
+                
+                // Check if this is today (show as today but disabled)
+                if (dateObj.getTime() === today.getTime()) {
+                    dayBtn.classList.add('today');
+                    dayBtn.classList.add('disabled');
+                } else if (dateObj < tomorrow) {
+                    // Check if date is before tomorrow (past dates)
+                    dayBtn.classList.add('disabled');
+                } else {
+                    // Check if this is the selected date
+                    if (calendarSelectedDate === dateString) {
+                        dayBtn.classList.add('selected');
+                    }
+                    
+                    dayBtn.addEventListener('click', () => selectCalendarDate(dateString, dayBtn));
+                }
+                
+                calendarDays.appendChild(dayBtn);
+            }
+        }
+        
+        // Format date to ISO string (YYYY-MM-DD)
+        function formatDateToISO(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+        
+        // Select a date on the calendar
+        function selectCalendarDate(dateString, dayBtn) {
+            // Remove previous selection
+            document.querySelectorAll('.calendar-day.selected').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // Set new selection
+            calendarSelectedDate = dateString;
+            dayBtn.classList.add('selected');
+            
+            // Update hidden input
+            document.getElementById('dateModalInput').value = dateString;
+            
+            // Enable confirm button
+            document.getElementById('dateModalConfirm').disabled = false;
+            
+            // Update display
+            updateSelectedDateDisplay();
+        }
+        
+        // Update the selected date display
+        function updateSelectedDateDisplay() {
+            const displayContainer = document.getElementById('calendarSelectedDisplay');
+            const displayDate = document.getElementById('calendarSelectedDate');
+            
+            if (calendarSelectedDate) {
+                const date = new Date(calendarSelectedDate + 'T00:00:00');
+                const formatted = date.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+                displayDate.textContent = formatted;
+                displayDate.classList.remove('placeholder');
+                displayContainer.classList.add('has-date');
+            } else {
+                displayDate.textContent = 'Select a date';
+                displayDate.classList.add('placeholder');
+                displayContainer.classList.remove('has-date');
+            }
+        }
+        
+        // Navigate calendar months
+        function navigateCalendar(direction) {
+            calendarCurrentMonth += direction;
+            
+            if (calendarCurrentMonth > 11) {
+                calendarCurrentMonth = 0;
+                calendarCurrentYear++;
+            } else if (calendarCurrentMonth < 0) {
+                calendarCurrentMonth = 11;
+                calendarCurrentYear--;
+            }
+            
+            renderCalendar();
+        }
+
+        function closeDateModal() {
+            const modal = document.getElementById('dateModalOverlay');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            currentEditingCard = null;
+        }
+
+        function removeEventSelection() {
+            if (!currentEditingCard) return;
+            
+            const eventSlug = currentEditingCard.dataset.event;
+            
+            // Remove selection from card
+            currentEditingCard.classList.remove('selected');
+            currentEditingCard.classList.remove('has-date');
+            const checkbox = currentEditingCard.querySelector('input[type="checkbox"]');
+            checkbox.checked = false;
+            
+            // Clear date display
+            const dateDisplay = currentEditingCard.querySelector('.date-display');
+            if (dateDisplay) dateDisplay.textContent = '';
+            
+            // Remove from state
+            delete eventDates[eventSlug];
+            
+            updateSelectedEvents();
+            closeDateModal();
+        }
+
+        function confirmDateSelection() {
+            const selectedDate = calendarSelectedDate;
+            
+            if (!selectedDate || !currentEditingCard) return;
+            
+            const eventSlug = currentEditingCard.dataset.event;
+            
+            // Update card state
+            currentEditingCard.classList.add('selected');
+            currentEditingCard.classList.add('has-date');
+            const checkbox = currentEditingCard.querySelector('input[type="checkbox"]');
+            checkbox.checked = true;
+            
+            // Update date display on card
+            const dateDisplay = currentEditingCard.querySelector('.date-display');
+            const formattedDate = new Date(selectedDate + 'T00:00:00').toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+            dateDisplay.textContent = formattedDate;
+            
+            // Store the date
+            eventDates[eventSlug] = selectedDate;
+            
+            updateSelectedEvents();
+            closeDateModal();
+        }
+
+        function initDateModalHandlers() {
+            const modal = document.getElementById('dateModalOverlay');
+            const closeBtn = document.getElementById('dateModalClose');
+            const cancelBtn = document.getElementById('dateModalCancel');
+            const confirmBtn = document.getElementById('dateModalConfirm');
+            const removeBtn = document.getElementById('dateModalRemove');
+            const prevBtn = document.getElementById('calendarPrev');
+            const nextBtn = document.getElementById('calendarNext');
+
+            closeBtn.addEventListener('click', closeDateModal);
+            cancelBtn.addEventListener('click', closeDateModal);
+            confirmBtn.addEventListener('click', confirmDateSelection);
+            removeBtn.addEventListener('click', removeEventSelection);
+            
+            // Calendar navigation
+            prevBtn.addEventListener('click', () => navigateCalendar(-1));
+            nextBtn.addEventListener('click', () => navigateCalendar(1));
+
+            // Close on overlay click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeDateModal();
+            });
+
+            // Close on Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.classList.contains('active')) {
+                    closeDateModal();
+                }
+            });
+        }
+
+        function updateSelectedEvents() {
+            selectedEvents = Array.from(document.querySelectorAll('.event-card.selected'))
+                .map(card => card.dataset.event);
+            
+            // Check if all selected events have dates
+            const allHaveDates = selectedEvents.length > 0 && 
+                selectedEvents.every(eventSlug => eventDates[eventSlug]);
+            
+            document.getElementById('toStep2').disabled = !allHaveDates;
+        }
+
+        // Navigation Handlers
+        function initNavigationHandlers() {
+            // Step 1 to 2
+            document.getElementById('toStep2').addEventListener('click', () => {
+                generateServicesForEvents();
+                goToStep(2);
+            });
+
+            // Step 2 to 1
+            document.getElementById('backToStep1').addEventListener('click', () => goToStep(1));
+
+            // Step 2 to 3 (Review)
+            document.getElementById('toStep3').addEventListener('click', () => {
+                generateInvoicePreview();
+                goToStep(3);
+            });
+
+            // Step 3 to 2
+            document.getElementById('backToStep2').addEventListener('click', () => goToStep(2));
+
+            // Click on step indicators to go back
+            stepItems.forEach((item, index) => {
+                item.style.cursor = 'pointer';
+                item.addEventListener('click', () => {
+                    const clickedStep = index + 1;
+                    const currentStep = getCurrentStep();
+                    
+                    // Only allow going back to previous/completed steps
+                    if (clickedStep < currentStep) {
+                        if (clickedStep === 2) {
+                            generateServicesForEvents();
+                        }
+                        goToStep(clickedStep);
+                    }
+                });
+            });
+
+            // Generate Invoice (with email validation)
+            document.getElementById('generateInvoice').addEventListener('click', async () => {
+                if (validateCustomerDetails()) {
+                    const btn = document.getElementById('generateInvoice');
+                    const originalHTML = btn.innerHTML;
+                    btn.disabled = true;
+                    btn.innerHTML = `
+                        <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" opacity="0.25"></circle>
+                            <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Sending...
+                    `;
+                    
+                    await generatePDF();
+                    
+                    btn.disabled = false;
+                    btn.innerHTML = originalHTML;
+                }
+            });
+
+            // Start Over
+            document.getElementById('startOver').addEventListener('click', resetForm);
+        }
+
+        function goToStep(step) {
+            // Update step indicators
+            stepItems.forEach((item, index) => {
+                item.classList.remove('active', 'completed');
+                if (index + 1 < step) {
+                    item.classList.add('completed');
+                } else if (index + 1 === step) {
+                    item.classList.add('active');
+                }
+            });
+
+            // Update form sections
+            formSections.forEach(section => section.classList.remove('active'));
+            document.getElementById(`step${step}`).classList.add('active');
+
+            // Update background image based on step
+            const bookingPage = document.getElementById('pageBooking');
+            if (step === 2) {
+                bookingPage.style.backgroundImage = "url('slider_2.png')";
+            } else {
+                bookingPage.style.backgroundImage = "url('slider_1.png')";
+            }
+
+            // Scroll to top of form
+            document.getElementById('booking').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Get current step number
+        function getCurrentStep() {
+            for (let i = 0; i < stepItems.length; i++) {
+                if (stepItems[i].classList.contains('active')) {
+                    return i + 1;
+                }
+            }
+            return 1;
+        }
+
+        // Generate Services for Selected Events (using API data with category-based pricing)
+        function generateServicesForEvents() {
+            const container = document.getElementById('servicesContainer');
+            container.innerHTML = '';
+
+            selectedEvents.forEach(eventSlug => {
+                if (!selectedServices[eventSlug]) {
+                    selectedServices[eventSlug] = [];
+                }
+
+                // Find the event data from API
+                const eventData = eventsData.find(e => e.slug === eventSlug);
+                if (!eventData) return;
+
+                const services = eventData.services || [];
+                
+                if (services.length === 0) {
+                    return; // Skip events with no services
+                }
+
+                const eventDate = eventDates[eventSlug] ? new Date(eventDates[eventSlug]).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
+                
+                const eventBlock = document.createElement('div');
+                eventBlock.className = 'event-services-block event-services-group';
+                eventBlock.dataset.event = eventSlug;
+                eventBlock.innerHTML = `
+                    <div class="event-services-header">
+                        <h3>${eventData.name}</h3>
+                        <div class="event-date-display">
+                            <span class="date-label">📅</span>
+                            <span class="date-value">${eventDate}</span>
+                        </div>
+                    </div>
+                    <div class="event-services-warning" style="display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: #FFF3CD; border: 1px solid #FFECB5; border-radius: 8px; margin-bottom: 16px; color: #856404; font-size: 14px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                        </svg>
+                        <span>Please select at least 1 service for this event</span>
+                    </div>
+                    <div class="services-grid" data-event="${eventSlug}">
+                        ${services.map(service => `
+                            <div class="service-item ${selectedServices[eventSlug].includes(service.slug) ? 'selected' : ''}" 
+                                 data-service="${service.slug}" 
+                                 data-price="${service.price}"
+                                 data-name="${service.name}">
+                                <input type="checkbox" ${selectedServices[eventSlug].includes(service.slug) ? 'checked' : ''}>
+                                <div class="service-checkbox">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                </div>
+                                <div class="service-info">
+                                    <h4>${service.name}</h4>
+                                    <p>${service.description || ''}</p>
+                                </div>
+                                <div class="service-price">₹${service.price.toLocaleString('en-IN')}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(eventBlock);
+            });
+
+            // Add event listeners to service items
+            document.querySelectorAll('.service-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const eventSlug = item.closest('.services-grid').dataset.event;
+                    const serviceSlug = item.dataset.service;
+                    
+                    item.classList.toggle('selected');
+                    const checkbox = item.querySelector('input');
+                    checkbox.checked = item.classList.contains('selected');
+
+                    if (item.classList.contains('selected')) {
+                        if (!selectedServices[eventSlug].includes(serviceSlug)) {
+                            selectedServices[eventSlug].push(serviceSlug);
+                        }
+                    } else {
+                        selectedServices[eventSlug] = selectedServices[eventSlug].filter(s => s !== serviceSlug);
+                    }
+
+                    updateStep3Button();
+                    updatePriceSummary();
+                });
+            });
+
+            updateStep3Button();
+            updatePriceSummary();
+        }
+
+        // Update Price Summary
+        function updatePriceSummary() {
+            const breakdownContainer = document.getElementById('summaryBreakdown');
+            const totalAmountEl = document.getElementById('summaryTotalAmount');
+            const itemCountEl = document.getElementById('summaryItemCount');
+            
+            let grandTotal = 0;
+            let totalServices = 0;
+            let breakdownHTML = '';
+
+            selectedEvents.forEach(eventSlug => {
+                const eventData = eventsData.find(e => e.slug === eventSlug);
+                if (!eventData) return;
+
+                let eventTotal = 0;
+                const eventServices = selectedServices[eventSlug] || [];
+                
+                eventServices.forEach(serviceSlug => {
+                    const service = eventData.services.find(s => s.slug === serviceSlug);
+                    if (service) {
+                        eventTotal += service.price;
+                        totalServices++;
+                    }
+                });
+
+                if (eventTotal > 0) {
+                    breakdownHTML += `
+                        <div class="price-breakdown-row">
+                            <span class="event-name">${eventData.name}</span>
+                            <span class="event-price">₹${eventTotal.toLocaleString('en-IN')}</span>
+                        </div>
+                    `;
+                    grandTotal += eventTotal;
+                }
+            });
+
+            if (totalServices === 0) {
+                breakdownContainer.innerHTML = '<span class="price-summary-empty">No services selected yet</span>';
+                itemCountEl.textContent = 'Select services to see pricing';
+            } else {
+                breakdownContainer.innerHTML = breakdownHTML;
+                itemCountEl.innerHTML = `<span>${totalServices}</span> service${totalServices > 1 ? 's' : ''} selected`;
+            }
+
+            totalAmountEl.textContent = `₹${grandTotal.toLocaleString('en-IN')}`;
+        }
+
+        function updateStep3Button() {
+            // Check that EVERY selected event has at least one service
+            const allEventsHaveServices = selectedEvents.length > 0 && 
+                selectedEvents.every(eventSlug => {
+                    const services = selectedServices[eventSlug] || [];
+                    return services.length > 0;
+                });
+            
+            const toStep3Btn = document.getElementById('toStep3');
+            toStep3Btn.disabled = !allEventsHaveServices;
+            
+            // Show which events are missing services
+            const eventsWithoutServices = selectedEvents.filter(eventSlug => {
+                const services = selectedServices[eventSlug] || [];
+                return services.length === 0;
+            });
+            
+            // Update visual feedback on event sections
+            document.querySelectorAll('.event-services-group').forEach(group => {
+                const eventSlug = group.dataset.event;
+                const warningEl = group.querySelector('.event-services-warning');
+                const hasServices = (selectedServices[eventSlug] || []).length > 0;
+                
+                if (warningEl) {
+                    warningEl.style.display = hasServices ? 'none' : 'flex';
+                }
+            });
+        }
+
+        // Validate Customer Details
+        function validateCustomerDetails() {
+            let isValid = true;
+            
+            // Clear all previous errors
+            clearAllErrors();
+            
+            const email = document.getElementById('clientEmail').value.trim();
+
+            if (!email) {
+                showFieldError('clientEmail', 'Please enter your email address');
+                isValid = false;
+            } else if (!isValidEmail(email)) {
+                showFieldError('clientEmail', 'Please enter a valid email address');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                // Scroll to the first error
+                const firstError = document.querySelector('.form-group input.error');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstError.focus();
+                }
+                return false;
+            }
+
+            customerDetails = {
+                email
+            };
+
+            return true;
+        }
+
+        function showFieldError(fieldId, message) {
+            const field = document.getElementById(fieldId);
+            const errorElement = document.getElementById(fieldId + 'Error');
+            
+            field.classList.add('error');
+            if (errorElement) {
+                errorElement.querySelector('span').textContent = message;
+                errorElement.classList.add('show');
+            }
+            
+            // Remove error on input
+            field.addEventListener('input', function removeError() {
+                field.classList.remove('error');
+                if (errorElement) {
+                    errorElement.classList.remove('show');
+                }
+                field.removeEventListener('input', removeError);
+            }, { once: true });
+        }
+
+        function clearAllErrors() {
+            const errorFields = document.querySelectorAll('.form-group input.error, .form-group textarea.error');
+            errorFields.forEach(field => field.classList.remove('error'));
+            
+            const errorMessages = document.querySelectorAll('.error-message');
+            errorMessages.forEach(msg => msg.classList.remove('show'));
+        }
+
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        // Calculate Totals (using API data with category-based pricing)
+        function calculateTotals() {
+            let subtotal = 0;
+            const items = [];
+
+            selectedEvents.forEach(eventSlug => {
+                const eventData = eventsData.find(e => e.slug === eventSlug);
+                if (!eventData) return;
+
+                const eventServiceSlugs = selectedServices[eventSlug] || [];
+                eventServiceSlugs.forEach(serviceSlug => {
+                    // Find service in event's services (which has category-specific pricing)
+                    const service = eventData.services.find(s => s.slug === serviceSlug);
+                    if (service) {
+                        subtotal += service.price;
+                        items.push({
+                            event: eventData.name,
+                            service: service.name,
+                            price: service.price
+                        });
+                    }
+                });
+            });
+
+            const tax = Math.round(subtotal * 0.18); // 18% GST
+            const total = subtotal + tax;
+
+            return { subtotal, tax, total, items };
+        }
+
+        // Generate Services Preview
+        function generateInvoicePreview() {
+            const { subtotal, tax, total, items } = calculateTotals();
+
+            // Group items by event
+            const groupedItems = {};
+            items.forEach(item => {
+                if (!groupedItems[item.event]) {
+                    groupedItems[item.event] = [];
+                }
+                groupedItems[item.event].push(item);
+            });
+
+            const servicesPreview = document.getElementById('servicesPreview');
+            
+            let html = '';
+            
+            // Generate cards for each event
+            Object.entries(groupedItems).forEach(([event, services]) => {
+                const eventSlug = Object.keys(eventNames).find(key => eventNames[key] === event);
+                const eventDate = eventDates[eventSlug] 
+                    ? new Date(eventDates[eventSlug]).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) 
+                    : 'Date not set';
+                const eventSubtotal = services.reduce((sum, s) => sum + s.price, 0);
+                
+                html += `
+                    <div class="services-preview-card">
+                        <div class="services-preview-header">
+                            <span class="services-preview-event">${event}</span>
+                            <span class="services-preview-date">${eventDate}</span>
+                        </div>
+                        <div class="services-preview-list">
+                            ${services.map(service => `
+                                <div class="services-preview-item">
+                                    <span class="services-preview-item-name">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                        </svg>
+                                        ${service.service}
+                                    </span>
+                                    <span class="services-preview-item-price">₹${service.price.toLocaleString('en-IN')}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="services-preview-subtotal">
+                            <span class="services-preview-subtotal-label">Event Subtotal</span>
+                            <span class="services-preview-subtotal-value">₹${eventSubtotal.toLocaleString('en-IN')}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Add total card
+            html += `
+                <div class="services-total-card">
+                    <div class="services-total-info">
+                        <span class="services-total-label">Grand Total</span>
+                        <span class="services-total-breakdown">Subtotal: ₹${subtotal.toLocaleString('en-IN')} + GST (18%): ₹${tax.toLocaleString('en-IN')}</span>
+                    </div>
+                    <span class="services-total-amount">₹${total.toLocaleString('en-IN')}</span>
+                </div>
+            `;
+            
+            servicesPreview.innerHTML = html;
+        }
+
+        // Submit quote to backend API
+        async function submitQuote() {
+            const { items } = calculateTotals();
+            
+            // Build items array for API with event IDs and dates
+            const apiItems = [];
+            items.forEach(item => {
+                // Find event data to get the ID
+                const eventData = eventsData.find(e => e.name === item.event);
+                const eventSlug = Object.keys(eventNames).find(key => eventNames[key] === item.event);
+                
+                // Find service data to get the ID
+                let serviceId = null;
+                if (eventData && eventData.services) {
+                    const serviceData = eventData.services.find(s => s.name === item.service);
+                    if (serviceData) {
+                        serviceId = serviceData._id;
+                    }
+                }
+                
+                if (eventData && serviceId) {
+                    apiItems.push({
+                        eventId: eventData._id,
+                        serviceId: serviceId,
+                        eventDate: eventDates[eventSlug] || null
+                    });
+                }
+            });
+
+            try {
+                const response = await fetch(`${API_BASE}/api/quote`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        customerEmail: customerDetails.email,
+                        customerName: customerDetails.name || '',
+                        items: apiItems
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    console.log('Quote saved successfully:', result.data);
+                    return result.data;
+                } else {
+                    console.error('Failed to save quote:', result.error);
+                    showToast('Failed to save quote: ' + result.error, 'error');
+                    return null;
+                }
+            } catch (error) {
+                console.error('Error submitting quote:', error);
+                showToast('Error connecting to server', 'error');
+                return null;
+            }
+        }
+
+        // Generate PDF Invoice
+        async function generatePDF() {
+            // First submit to backend
+            const quoteData = await submitQuote();
+            
+            // Use quote number from backend if available
+            const invoiceNumber = quoteData ? quoteData.quoteNumber : 'WC-' + Date.now().toString().slice(-8);
+            
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+            const margin = 20;
+            let y = 0;
+
+            const { subtotal, tax, total, items } = calculateTotals();
+            const today = new Date().toLocaleDateString('en-IN', { 
+                day: '2-digit', 
+                month: 'short', 
+                year: 'numeric' 
+            });
+
+            // Header Background (increased height for logo padding)
+            doc.setFillColor(44, 44, 44);
+            doc.rect(0, 0, pageWidth, 65, 'F');
+
+            // Add Logo Image (square aspect ratio) and word logo
+            try {
+                const logoImg = new Image();
+                logoImg.src = 'logo.png';
+                await new Promise((resolve, reject) => {
+                    logoImg.onload = resolve;
+                    logoImg.onerror = reject;
+                    setTimeout(reject, 2000); // Timeout after 2s
+                });
+                doc.addImage(logoImg, 'PNG', margin, 10, 30, 30);
+                // Add word logo next to image
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(18);
+                doc.setFont('helvetica', 'bold');
+                doc.text('Wedding', margin + 35, 24);
+                doc.setTextColor(201, 168, 124);
+                doc.text('Clickz', margin + 35 + doc.getTextWidth('Wedding') + 2, 24);
+            } catch (e) {
+                // Fallback to text logo if image fails
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(24);
+                doc.setFont('helvetica', 'bold');
+                doc.text('Wedding', margin, 25);
+                doc.setTextColor(201, 168, 124);
+                doc.text('Clickz', margin + 38, 25);
+            }
+
+            // Quotation Badge (centered text)
+            const badgeWidth = 40;
+            const badgeHeight = 10;
+            const badgeX = pageWidth - margin - badgeWidth;
+            const badgeY = 15;
+            doc.setFillColor(201, 168, 124);
+            doc.roundedRect(badgeX, badgeY, badgeWidth, badgeHeight, 2, 2, 'F');
+            doc.setTextColor(44, 44, 44);
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'bold');
+            // Vertically center text: badgeY + (badgeHeight / 2) + (fontSize * 0.35 for baseline adjustment)
+            doc.text('QUOTATION', badgeX + badgeWidth / 2, badgeY + (badgeHeight / 2) + 1, { align: 'center' });
+
+            // Invoice Meta (moved down to add padding below logo)
+            doc.setTextColor(232, 213, 183);
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'normal');
+            
+            doc.text('INVOICE NUMBER', margin, 48);
+            doc.text('INVOICE DATE', pageWidth/2 - 15, 48);
+            doc.text('TOTAL EVENTS', pageWidth - margin - 28, 48);
+            
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(10);
+            doc.text(invoiceNumber, margin, 55);
+            doc.text(today, pageWidth/2 - 15, 55);
+            doc.text(selectedEvents.length.toString(), pageWidth - margin - 25, 55);
+
+            y = 78;
+
+            // From / To Section
+            doc.setTextColor(201, 168, 124);
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'bold');
+            doc.text('FROM', margin, y);
+            doc.text('TO', pageWidth/2 + 10, y);
+
+            y += 6;
+            doc.setTextColor(26, 26, 26);
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'bold');
+            doc.text('WeddingClickz Photography', margin, y);
+            doc.text('Customer', pageWidth/2 + 10, y);
+
+            y += 5;
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(107, 107, 107);
+
+            const fromLines = [
+                '2nd floor, 47th Cross Rd, 5th Block,',
+                'TMC Layout, 1st Phase, Jayanagar,',
+                'Bengaluru, Karnataka 560041',
+                'Phone: +91 97402 22927'
+            ];
+
+            const toLines = ['Email: ' + customerDetails.email];
+
+            fromLines.forEach((line, i) => {
+                doc.text(line, margin, y + (i * 5));
+            });
+
+            toLines.forEach((line, i) => {
+                const displayLine = line.length > 40 ? line.substring(0, 40) + '...' : line;
+                doc.text(displayLine, pageWidth/2 + 10, y + (i * 5));
+            });
+
+            y += Math.max(fromLines.length, toLines.length) * 5 + 10;
+
+            // Table Header
+            doc.setFillColor(250, 247, 242);
+            doc.rect(margin, y, pageWidth - (margin * 2), 10, 'F');
+            
+            doc.setTextColor(139, 115, 85);
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'bold');
+            doc.text('DESCRIPTION', margin + 5, y + 7);
+            doc.text('DATE', pageWidth/2, y + 7, { align: 'center' });
+            doc.text('AMOUNT', pageWidth - margin - 25, y + 7);
+
+            y += 15;
+
+            // Group items by event
+            const groupedItems = {};
+            items.forEach(item => {
+                if (!groupedItems[item.event]) {
+                    groupedItems[item.event] = [];
+                }
+                groupedItems[item.event].push(item);
+            });
+
+            // Table Content
+            doc.setFontSize(10);
+            Object.entries(groupedItems).forEach(([event, services]) => {
+                // Find event slug and date
+                const eventSlug = Object.keys(eventNames).find(key => eventNames[key] === event);
+                const eventDate = eventDates[eventSlug] ? new Date(eventDates[eventSlug]).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '-';
+                
+                // Event name with date
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(44, 44, 44);
+                doc.text(event, margin + 5, y);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(139, 115, 85);
+                doc.text(eventDate, pageWidth/2, y, { align: 'center' });
+                y += 6;
+
+                // Services
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(107, 107, 107);
+                services.forEach(service => {
+                    doc.text('    - ' + service.service, margin + 10, y);
+                    doc.setTextColor(44, 44, 44);
+                    doc.text('Rs.' + service.price.toLocaleString('en-IN'), pageWidth - margin - 25, y);
+                    doc.setTextColor(107, 107, 107);
+                    
+                    // Separator line
+                    doc.setDrawColor(232, 213, 183);
+                    doc.setLineWidth(0.1);
+                    doc.line(margin, y + 3, pageWidth - margin, y + 3);
+                    y += 8;
+                });
+
+                y += 3;
+            });
+
+            y += 5;
+
+            // Totals
+            const totalsX = pageWidth - margin - 70;
+            
+            doc.setTextColor(107, 107, 107);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Subtotal', totalsX, y);
+            doc.setTextColor(44, 44, 44);
+            doc.text('Rs.' + subtotal.toLocaleString('en-IN'), pageWidth - margin - 25, y);
+            
+            y += 7;
+            doc.setTextColor(107, 107, 107);
+            doc.text('GST (18%)', totalsX, y);
+            doc.setTextColor(44, 44, 44);
+            doc.text('Rs.' + tax.toLocaleString('en-IN'), pageWidth - margin - 25, y);
+            
+            y += 3;
+            doc.setDrawColor(201, 168, 124);
+            doc.setLineWidth(0.5);
+            doc.line(totalsX, y, pageWidth - margin, y);
+            
+            y += 8;
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(11);
+            doc.text('TOTAL', totalsX, y);
+            doc.setTextColor(139, 115, 85);
+            doc.setFontSize(14);
+            doc.text('Rs.' + total.toLocaleString('en-IN'), pageWidth - margin - 25, y);
+
+            // Terms & Conditions
+            y += 20;
+            doc.setFillColor(250, 247, 242);
+            doc.rect(margin, y, pageWidth - (margin * 2), 45, 'F');
+            
+            y += 8;
+            doc.setTextColor(44, 44, 44);
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Terms & Conditions', margin + 5, y);
+            
+            y += 6;
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(8);
+            doc.setTextColor(107, 107, 107);
+            
+            const terms = [
+                '* 50% advance payment required to confirm booking',
+                '* Remaining balance due 7 days before the event',
+                '* All edited photos delivered within 10 working days',
+                '* Cinematic films delivered within 2-4 weeks',
+                '* Travel and accommodation charges extra for outstation events'
+            ];
+            
+            terms.forEach((term, i) => {
+                doc.text(term, margin + 5, y + (i * 5));
+            });
+
+            // Footer
+            doc.setTextColor(201, 168, 124);
+            doc.setFontSize(8);
+            doc.text('Thank you for choosing WeddingClickz!', pageWidth/2, pageHeight - 15, { align: 'center' });
+
+            // Save PDF
+            const fileName = `WeddingClickz_Invoice_${invoiceNumber}.pdf`;
+            doc.save(fileName);
+
+            // Show appropriate toast based on email status
+            if (quoteData && quoteData.emailSent) {
+                showToast('Invoice downloaded & email sent!', 'success');
+            } else {
+                showToast('Invoice downloaded successfully!', 'success');
+            }
+            
+            // Show success step with email
+            document.getElementById('confirmEmailDisplay').textContent = customerDetails.email;
+            formSections.forEach(section => section.classList.remove('active'));
+            document.getElementById('successStep').classList.add('active');
+        }
+
+        // Reset Form
+        function resetForm() {
+            selectedEvents = [];
+            selectedServices = {};
+            eventDates = {};
+            customerDetails = {};
+
+            // Reset event cards
+            eventCards.forEach(card => {
+                card.classList.remove('selected');
+                card.classList.remove('has-date');
+                card.querySelector('input[type="checkbox"]').checked = false;
+                const dateDisplay = card.querySelector('.date-display');
+                if (dateDisplay) dateDisplay.textContent = '';
+            });
+
+            // Reset form fields
+            document.getElementById('clientEmail').value = '';
+
+            // Reset buttons
+            document.getElementById('toStep2').disabled = true;
+            document.getElementById('toStep3').disabled = true;
+
+            // Clear any errors
+            clearAllErrors();
+
+            // Go to step 1
+            goToStep(1);
+        }
+
+        // Scroll Effects
+        function initScrollEffects() {
+            const header = document.getElementById('header');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+        }
+
+        // Toast Notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toast.className = 'toast ' + type;
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
