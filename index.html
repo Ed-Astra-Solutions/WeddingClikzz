@@ -4276,7 +4276,9 @@
             const apiAdditionalServices = additionalItems.map(item => ({
                 additionalServiceId: item.id,
                 name: item.name,
-                price: item.price
+                price: item.price,
+                eventSlug: item.eventSlug,
+                event: item.event
             }));
 
             try {
