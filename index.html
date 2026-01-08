@@ -4432,12 +4432,39 @@
                 groupedItems[item.event].push(item);
             });
 
+            // Helper function to check if we need a new page and add table header
+            const checkPageBreak = (requiredSpace = 20) => {
+                if (y + requiredSpace > pageHeight - 40) {
+                    doc.addPage();
+                    y = 20;
+                    
+                    // Add table header on new page
+                    doc.setFillColor(250, 247, 242);
+                    doc.rect(margin, y, pageWidth - (margin * 2), 10, 'F');
+                    
+                    doc.setTextColor(139, 115, 85);
+                    doc.setFontSize(8);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text('DESCRIPTION', margin + 5, y + 7);
+                    doc.text('DATE', pageWidth/2, y + 7, { align: 'center' });
+                    doc.text('AMOUNT', pageWidth - margin - 25, y + 7);
+                    
+                    y += 15;
+                    return true;
+                }
+                return false;
+            };
+
             // Table Content
             doc.setFontSize(10);
             Object.entries(groupedItems).forEach(([event, services]) => {
                 // Find event slug and date
                 const eventSlug = Object.keys(eventNames).find(key => eventNames[key] === event);
                 const eventDate = eventDates[eventSlug] ? new Date(eventDates[eventSlug]).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '-';
+                
+                // Calculate space needed for this event block (event name + all services)
+                const eventBlockHeight = 6 + (services.length * 8) + 3;
+                checkPageBreak(eventBlockHeight);
                 
                 // Event name with date
                 doc.setFont('helvetica', 'bold');
@@ -4452,6 +4479,9 @@
                 doc.setFont('helvetica', 'normal');
                 doc.setTextColor(107, 107, 107);
                 services.forEach(service => {
+                    // Check if we need a new page for this service
+                    checkPageBreak(12);
+                    
                     doc.text('    - ' + service.service, margin + 10, y);
                     doc.setTextColor(44, 44, 44);
                     doc.text('Rs.' + service.price.toLocaleString('en-IN'), pageWidth - margin - 25, y);
@@ -4472,6 +4502,9 @@
             if (additionalItems && additionalItems.length > 0) {
                 y += 5;
                 
+                // Check if we need a new page for additional services header
+                checkPageBreak(20 + (additionalItems.length * 8));
+                
                 // Additional Services Header
                 doc.setFillColor(201, 168, 124);
                 doc.rect(margin, y, pageWidth - (margin * 2), 8, 'F');
@@ -4484,6 +4517,9 @@
                 // Additional Services Items
                 doc.setFont('helvetica', 'normal');
                 additionalItems.forEach(addService => {
+                    // Check if we need a new page for this add-on
+                    checkPageBreak(12);
+                    
                     doc.setTextColor(107, 107, 107);
                     doc.text('    - ' + addService.name, margin + 10, y);
                     doc.setTextColor(44, 44, 44);
@@ -4498,6 +4534,9 @@
             }
 
             y += 5;
+            
+            // Check if we need a new page for totals and terms (need ~80mm space)
+            checkPageBreak(80);
 
             // Totals
             const totalsX = pageWidth - margin - 70;
