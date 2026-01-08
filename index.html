@@ -4455,8 +4455,10 @@
             });
 
             // Helper function to check if we need a new page and add table header
-            const checkPageBreak = (requiredSpace = 20) => {
-                if (y + requiredSpace > pageHeight - 40) {
+            // Only adds new page if content truly cannot fit
+            const checkPageBreak = (requiredSpace = 10) => {
+                const bottomMargin = 20;
+                if (y + requiredSpace > pageHeight - bottomMargin) {
                     doc.addPage();
                     y = 20;
                     
@@ -4484,9 +4486,8 @@
                 const eventSlug = Object.keys(eventNames).find(key => eventNames[key] === event);
                 const eventDate = eventDates[eventSlug] ? new Date(eventDates[eventSlug]).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '-';
                 
-                // Calculate space needed for this event block (event name + all services)
-                const eventBlockHeight = 6 + (services.length * 8) + 3;
-                checkPageBreak(eventBlockHeight);
+                // Only check for event header line
+                checkPageBreak(12);
                 
                 // Event name with date
                 doc.setFont('helvetica', 'bold');
@@ -4524,8 +4525,8 @@
             if (additionalItems && additionalItems.length > 0) {
                 y += 5;
                 
-                // Check if we need a new page for additional services header
-                checkPageBreak(20 + (additionalItems.length * 8));
+                // Only check for header
+                checkPageBreak(15);
                 
                 // Additional Services Header
                 doc.setFillColor(201, 168, 124);
@@ -4557,8 +4558,8 @@
 
             y += 5;
             
-            // Check if we need a new page for totals and terms (need ~80mm space)
-            checkPageBreak(80);
+            // Check if we need a new page for totals and terms
+            checkPageBreak(70);
 
             // Totals
             const totalsX = pageWidth - margin - 70;
