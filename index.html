@@ -4481,10 +4481,15 @@
 
             // Table Content
             doc.setFontSize(10);
+            const { additionalItems } = calculateTotals();
+            
             Object.entries(groupedItems).forEach(([event, services]) => {
                 // Find event slug and date
                 const eventSlug = Object.keys(eventNames).find(key => eventNames[key] === event);
                 const eventDate = eventDates[eventSlug] ? new Date(eventDates[eventSlug]).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '-';
+                
+                // Get add-ons for this event
+                const eventAddons = additionalItems ? additionalItems.filter(addon => addon.eventSlug === eventSlug) : [];
                 
                 // Only check for event header line
                 checkPageBreak(12);
@@ -4517,44 +4522,36 @@
                     y += 8;
                 });
 
+                // Add-ons for this event
+                if (eventAddons.length > 0) {
+                    // Add-ons sub-header
+                    checkPageBreak(10);
+                    doc.setFontSize(8);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(201, 168, 124);
+                    doc.text('    Add-ons:', margin + 8, y);
+                    y += 5;
+                    
+                    doc.setFontSize(10);
+                    doc.setFont('helvetica', 'normal');
+                    eventAddons.forEach(addon => {
+                        checkPageBreak(12);
+                        
+                        doc.setTextColor(107, 107, 107);
+                        doc.text('    - ' + addon.name, margin + 10, y);
+                        doc.setTextColor(44, 44, 44);
+                        doc.text('Rs.' + addon.price.toLocaleString('en-IN'), pageWidth - margin - 25, y);
+                        
+                        // Separator line
+                        doc.setDrawColor(232, 213, 183);
+                        doc.setLineWidth(0.1);
+                        doc.line(margin, y + 3, pageWidth - margin, y + 3);
+                        y += 8;
+                    });
+                }
+
                 y += 3;
             });
-
-            // Add Additional Services section if any are selected
-            const { additionalItems } = calculateTotals();
-            if (additionalItems && additionalItems.length > 0) {
-                y += 5;
-                
-                // Only check for header
-                checkPageBreak(15);
-                
-                // Additional Services Header
-                doc.setFillColor(201, 168, 124);
-                doc.rect(margin, y, pageWidth - (margin * 2), 8, 'F');
-                doc.setTextColor(255, 255, 255);
-                doc.setFontSize(9);
-                doc.setFont('helvetica', 'bold');
-                doc.text('ADD-ON SERVICES', margin + 5, y + 5.5);
-                y += 12;
-
-                // Additional Services Items
-                doc.setFont('helvetica', 'normal');
-                additionalItems.forEach(addService => {
-                    // Check if we need a new page for this add-on
-                    checkPageBreak(12);
-                    
-                    doc.setTextColor(107, 107, 107);
-                    doc.text('    - ' + addService.name, margin + 10, y);
-                    doc.setTextColor(44, 44, 44);
-                    doc.text('Rs.' + addService.price.toLocaleString('en-IN'), pageWidth - margin - 25, y);
-                    
-                    // Separator line
-                    doc.setDrawColor(232, 213, 183);
-                    doc.setLineWidth(0.1);
-                    doc.line(margin, y + 3, pageWidth - margin, y + 3);
-                    y += 8;
-                });
-            }
 
             y += 5;
             
