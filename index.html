@@ -3821,14 +3821,6 @@
             formSections.forEach(section => section.classList.remove('active'));
             document.getElementById(`step${step}`).classList.add('active');
 
-            // Update background image based on step
-            const bookingPage = document.getElementById('pageBooking');
-            if (step === 2) {
-                bookingPage.style.backgroundImage = "url('slider_2.png')";
-            } else {
-                bookingPage.style.backgroundImage = "url('slider_1.png')";
-            }
-
             // Scroll to top of form
             document.getElementById('booking').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
