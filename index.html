@@ -479,18 +479,6 @@
             display: none;
         }
 
-        .event-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.25rem;
-            font-size: 1.5rem;
-        }
-
         .event-card h3 {
             font-size: 1.5rem;
             color: var(--charcoal);
@@ -1010,13 +998,6 @@
             color: var(--gold);
         }
 
-        .price-summary-gst {
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.5);
-            text-align: right;
-            margin-top: 0.25rem;
-        }
-
         @media (max-width: 1024px) {
             .step2-layout {
                 grid-template-columns: 1fr;
@@ -1334,6 +1315,223 @@
             width: 14px;
             height: 14px;
             flex-shrink: 0;
+        }
+
+        /* Enhanced Email Input for Step 3 */
+        .email-input-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .email-input-container .email-icon {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 22px;
+            height: 22px;
+            color: var(--gold);
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .email-input-container input {
+            width: 100%;
+            padding: 1.25rem 3.5rem 1.25rem 3.5rem;
+            border: 2px solid var(--gold-light);
+            border-radius: 14px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background: var(--white);
+            color: var(--charcoal);
+        }
+
+        .email-input-container input::placeholder {
+            color: #aaa;
+            font-weight: 400;
+        }
+
+        .email-input-container input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 4px rgba(201, 168, 124, 0.15), 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .email-input-container input:focus + .email-icon,
+        .email-input-container input:not(:placeholder-shown) + .email-icon {
+            color: var(--gold-dark);
+        }
+
+        .email-input-container .validation-icon {
+            position: absolute;
+            right: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .email-input-container .validation-icon.valid {
+            color: var(--success);
+            opacity: 1;
+            animation: popIn 0.3s ease;
+        }
+
+        .email-input-container .validation-icon.invalid {
+            color: var(--error);
+            opacity: 1;
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes popIn {
+            0% { transform: translateY(-50%) scale(0); opacity: 0; }
+            50% { transform: translateY(-50%) scale(1.2); }
+            100% { transform: translateY(-50%) scale(1); opacity: 1; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateY(-50%) translateX(0); }
+            20%, 60% { transform: translateY(-50%) translateX(-3px); }
+            40%, 80% { transform: translateY(-50%) translateX(3px); }
+        }
+
+        .email-input-container input.valid {
+            border-color: var(--success);
+            background: linear-gradient(to right, #F0FFF4, #ECFDF5);
+        }
+
+        .email-input-container input.valid:focus {
+            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.15), 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .email-input-container input.error {
+            border-color: var(--error);
+            background: linear-gradient(to right, #FFF5F5, #FEF2F2);
+        }
+
+        .email-input-container input.error:focus {
+            box-shadow: 0 0 0 4px rgba(229, 57, 53, 0.1), 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .email-hint {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding-left: 0.5rem;
+        }
+
+        .email-hint svg {
+            width: 16px;
+            height: 16px;
+            color: var(--gold);
+            flex-shrink: 0;
+        }
+
+        /* Step 3 Review Card */
+        .review-header-card {
+            background: linear-gradient(135deg, var(--charcoal) 0%, #1a1a1a 50%, var(--charcoal-light) 100%);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .review-header-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(201, 168, 124, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .review-header-card h3 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--white);
+            position: relative;
+        }
+
+        .review-header-card p {
+            color: var(--gold-light);
+            margin-bottom: 2rem;
+            font-size: 1rem;
+            max-width: 500px;
+        }
+
+        .review-email-section {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 1.75rem;
+            border: 1px solid rgba(201, 168, 124, 0.25);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .review-email-section label {
+            color: var(--gold);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .review-email-section label svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .review-email-section .email-input-container input {
+            background: rgba(255, 255, 255, 0.98);
+            border-color: rgba(201, 168, 124, 0.4);
+            font-size: 1.1rem;
+        }
+
+        .review-email-section .email-input-container input:focus {
+            background: var(--white);
+            border-color: var(--gold);
+            box-shadow: 0 0 0 4px rgba(201, 168, 124, 0.2), 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .review-email-section .email-input-container input.valid {
+            background: linear-gradient(to right, #F0FFF4, #ECFDF5);
+            border-color: var(--success);
+        }
+
+        .review-email-section .email-input-container input.error {
+            background: linear-gradient(to right, #FFF5F5, #FEF2F2);
+            border-color: var(--error);
+        }
+
+        .review-email-section .error-message {
+            color: #FCA5A5;
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        .review-email-section .email-hint {
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 1rem;
+        }
+
+        .review-email-section .email-hint svg {
+            color: var(--gold-light);
         }
 
         .form-group textarea {
@@ -1987,6 +2185,7 @@
         }
 
         @media (max-width: 768px) {
+            /* Header */
             .header-container {
                 padding: 0 1rem;
             }
@@ -1995,15 +2194,357 @@
                 display: none;
             }
 
+            .logo h1 {
+                font-size: 1.1rem;
+            }
+
+            .logo-img {
+                height: 40px;
+            }
+
+            /* Hero Section */
+            .hero-content {
+                padding: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+
+            .hero p {
+                font-size: 0.85rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .hero-badge {
+                font-size: 0.6rem;
+                padding: 0.35rem 0.75rem;
+                margin-bottom: 1rem;
+            }
+
+            .hero-cta {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.75rem;
+            }
+
+            /* Main Content */
+            main {
+                padding: 12px 0.75rem 0;
+            }
+
+            section {
+                padding: 1rem 0;
+            }
+
+            /* Section Header */
+            .section-header {
+                margin-bottom: 0.75rem;
+            }
+
+            .section-title {
+                font-size: 1.1rem;
+            }
+
+            .section-subtitle {
+                font-size: 0.75rem;
+            }
+
+            /* Steps Container */
             .steps-container {
                 flex-wrap: wrap;
-                gap: 1rem;
+                gap: 0.35rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .step-item {
+                max-width: none;
+                flex: 1;
+                min-width: 70px;
             }
 
             .step-item:not(:last-child)::after {
                 display: none;
             }
 
+            .step-number {
+                width: 26px;
+                height: 26px;
+                font-size: 0.75rem;
+            }
+
+            .step-label {
+                font-size: 0.55rem;
+            }
+
+            /* Booking Container */
+            .booking-container {
+                border-radius: 12px;
+            }
+
+            .form-section {
+                padding: 1rem;
+            }
+
+            /* Events Grid */
+            .events-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .event-card {
+                padding: 1rem;
+                border-radius: 10px;
+            }
+
+            .event-card h3 {
+                font-size: 1rem;
+            }
+
+            .event-card p {
+                font-size: 0.7rem;
+            }
+
+            .event-check {
+                width: 20px;
+                height: 20px;
+            }
+
+            .event-card-date-badge {
+                padding: 0.3rem 0.6rem;
+            }
+
+            .event-card-date-badge span {
+                font-size: 0.65rem;
+            }
+
+            /* Date Modal */
+            .date-modal {
+                width: 95%;
+                max-width: none;
+                margin: 0.75rem;
+            }
+
+            .date-modal-header {
+                padding: 0.75rem;
+            }
+
+            .date-modal-header h3 {
+                font-size: 1rem;
+            }
+
+            .date-modal-body {
+                padding: 1rem 0.75rem;
+            }
+
+            .calendar-nav-btn {
+                width: 32px;
+                height: 32px;
+            }
+
+            .calendar-month-year {
+                font-size: 0.9rem;
+            }
+
+            .calendar-day {
+                font-size: 0.7rem;
+            }
+
+            .date-modal-footer {
+                padding: 0.75rem;
+                flex-direction: column;
+            }
+
+            .date-modal-btn {
+                padding: 0.625rem 0.875rem;
+                font-size: 0.75rem;
+            }
+
+            /* Step 2 Layout */
+            .step2-layout {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .event-services-block {
+                padding: 1rem;
+                border-radius: 10px;
+                margin-bottom: 1rem;
+            }
+
+            .event-services-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .event-services-header h3 {
+                font-size: 1rem;
+            }
+
+            .event-date-display {
+                padding: 0.3rem 0.6rem;
+            }
+
+            .event-date-display .date-value {
+                font-size: 0.7rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .service-item {
+                padding: 0.75rem;
+                border-radius: 8px;
+            }
+
+            .service-info h4 {
+                font-size: 0.75rem;
+            }
+
+            .service-info p {
+                font-size: 0.65rem;
+            }
+
+            .service-price {
+                font-size: 0.85rem;
+            }
+
+            .service-checkbox {
+                width: 18px;
+                height: 18px;
+            }
+
+            /* Price Summary Card */
+            .price-summary-card {
+                position: relative;
+                top: 0;
+                padding: 1rem;
+                border-radius: 12px;
+                margin-top: 1rem;
+            }
+
+            .price-summary-header h4 {
+                font-size: 0.95rem;
+            }
+
+            .price-summary-total .total-amount {
+                font-size: 1.25rem;
+            }
+
+            /* Step 3 Review Header Card */
+            .review-header-card {
+                padding: 1rem;
+                border-radius: 12px;
+                margin-bottom: 1rem;
+            }
+
+            .review-header-card h3 {
+                font-size: 1.2rem;
+            }
+
+            .review-header-card p {
+                font-size: 0.8rem;
+                margin-bottom: 1rem;
+            }
+
+            .review-email-section {
+                padding: 1rem;
+                border-radius: 10px;
+            }
+
+            .review-email-section label {
+                font-size: 0.7rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .email-input-container input {
+                padding: 0.875rem 2.75rem;
+                font-size: 0.95rem;
+                border-radius: 10px;
+            }
+
+            .email-input-container .email-icon {
+                left: 0.875rem;
+                width: 18px;
+                height: 18px;
+            }
+
+            .email-input-container .validation-icon {
+                right: 0.875rem;
+                width: 18px;
+                height: 18px;
+            }
+
+            .email-hint {
+                font-size: 0.75rem;
+            }
+                font-size: 0.7rem;
+            }
+
+            /* Services Preview */
+            .services-preview {
+                gap: 0.75rem;
+            }
+
+            .services-preview-card {
+                border-radius: 10px;
+            }
+
+            .services-preview-header {
+                padding: 0.75rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.15rem;
+            }
+
+            .services-preview-event {
+                font-size: 0.9rem;
+            }
+
+            .services-preview-date {
+                font-size: 0.7rem;
+            }
+
+            .services-preview-list {
+                padding: 0.5rem 0.75rem;
+            }
+
+            .services-preview-item {
+                padding: 0.5rem 0;
+            }
+
+            .services-preview-item-name {
+                font-size: 0.75rem;
+            }
+
+            .services-preview-item-price {
+                font-size: 0.75rem;
+            }
+
+            .services-preview-subtotal {
+                padding: 0.625rem 0.75rem;
+            }
+
+            /* Total Card */
+            .services-total-card {
+                padding: 1rem;
+                border-radius: 10px;
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+
+            .services-total-info {
+                align-items: center;
+            }
+
+            .services-total-amount {
+                font-size: 1.4rem;
+            }
+
+            /* Form Elements */
             .details-form {
                 grid-template-columns: 1fr;
             }
@@ -2012,31 +2553,188 @@
                 grid-column: span 1;
             }
 
-            .invoice-header-top {
-                flex-direction: column;
-                gap: 1rem;
+            .form-group label {
+                font-size: 0.75rem;
             }
 
-            .invoice-meta {
-                grid-template-columns: 1fr;
+            .form-group input,
+            .form-group textarea {
+                padding: 0.625rem 0.875rem;
+                font-size: 0.85rem;
+                border-radius: 8px;
             }
 
-            .invoice-parties {
-                grid-template-columns: 1fr;
-            }
-
-            .footer-content {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
+            /* Buttons */
             .btn-container {
                 flex-direction: column;
+                gap: 0.5rem;
+                margin-top: 1rem;
+                padding-top: 1rem;
             }
 
             .btn {
                 width: 100%;
                 justify-content: center;
+                padding: 0.7rem 1.25rem;
+                font-size: 0.75rem;
+            }
+
+            /* Invoice Preview */
+            .invoice-preview {
+                border-radius: 10px;
+            }
+
+            .invoice-header {
+                padding: 1rem;
+            }
+
+            .invoice-header-top {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .invoice-logo h2 {
+                font-size: 1.2rem;
+            }
+
+            .invoice-badge {
+                font-size: 0.65rem;
+                padding: 0.3rem 0.75rem;
+            }
+
+            .invoice-meta {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .invoice-body {
+                padding: 1rem;
+            }
+
+            .invoice-parties {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .invoice-table th,
+            .invoice-table td {
+                padding: 0.5rem;
+                font-size: 0.7rem;
+            }
+
+            .invoice-table td:last-child {
+                font-size: 0.75rem;
+            }
+
+            .invoice-totals-box {
+                width: 100%;
+            }
+
+            .invoice-totals-row.total span:last-child {
+                font-size: 1.2rem;
+            }
+
+            .invoice-footer {
+                padding: 1rem;
+            }
+
+            /* Success Container */
+            .success-container {
+                padding: 1.5rem 1rem;
+                min-height: 45vh;
+            }
+
+            .success-icon {
+                width: 60px;
+                height: 60px;
+                margin-bottom: 1rem;
+            }
+
+            .success-icon svg {
+                width: 32px;
+                height: 32px;
+            }
+
+            .success-container h2 {
+                font-size: 1.4rem;
+            }
+
+            .success-container p {
+                font-size: 0.85rem;
+            }
+
+            /* Footer */
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .footer-brand h3 {
+                font-size: 1.2rem;
+            }
+
+            .footer-logo {
+                justify-content: center;
+            }
+
+            /* Toast */
+            .toast {
+                bottom: 0.75rem;
+                right: 0.75rem;
+                left: 0.75rem;
+                padding: 0.625rem 0.875rem;
+            }
+
+            /* Booking Page */
+            .page-booking {
+                padding-top: 60px;
+            }
+        }
+
+        /* Extra small screens */
+        @media (max-width: 375px) {
+            .hero h1 {
+                font-size: 1.4rem;
+            }
+
+            .steps-container {
+                gap: 0.15rem;
+            }
+
+            .step-item {
+                min-width: 70px;
+            }
+
+            .step-number {
+                width: 28px;
+                height: 28px;
+                font-size: 0.8rem;
+            }
+
+            .step-label {
+                font-size: 0.55rem;
+            }
+
+            .review-header-card h3 {
+                font-size: 1.3rem;
+            }
+
+            .review-header-card p {
+                font-size: 0.8rem;
+            }
+
+            .email-input-container input {
+                padding: 0.875rem 2.75rem;
+                font-size: 0.9rem;
+            }
+
+            .services-total-amount {
+                font-size: 1.5rem;
+            }
+
+            .btn {
+                font-size: 0.75rem;
+                padding: 0.75rem 1rem;
             }
         }
     </style>
@@ -2066,9 +2764,6 @@
                 <p>Select your events, choose your services, and receive a professional invoice instantly. Let us capture every precious moment of your special day.</p>
                 <a href="#" class="hero-cta" id="startBookingBtn">
                     Start Booking
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                    </svg>
                 </a>
             </div>
         </section>
@@ -2175,28 +2870,42 @@
                                 <span class="total-label">Total</span>
                                 <span class="total-amount" id="summaryTotalAmount">₹0</span>
                             </div>
-                            <div class="price-summary-gst">+ 18% GST applicable</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Step 3: Review & Invoice -->
                 <div class="form-section" id="step3">
-                    <div class="section-header" style="margin-bottom: 2rem;">
-                        <h3 class="section-title" style="font-size: 1.75rem;">Review Your Booking</h3>
-                        <p class="section-subtitle">Please review your selections, enter your email, and download your invoice.</p>
-                    </div>
-
-                    <!-- Email Input -->
-                    <div class="details-form" style="margin-bottom: 2rem;">
-                        <div class="form-group full-width">
-                            <label>Email Address <span>*</span></label>
-                            <input type="email" id="clientEmail" placeholder="your@email.com" required>
+                    <!-- Review Header with Email Input -->
+                    <div class="review-header-card">
+                        <h3>Almost There!</h3>
+                        <p>Review your selections below and enter your email to receive your personalized quote.</p>
+                        
+                        <div class="review-email-section">
+                            <label>Your Email Address <span style="color: #FCA5A5;">*</span></label>
+                            <div class="email-input-container">
+                                <svg class="email-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                </svg>
+                                <input type="email" id="clientEmail" placeholder="your@email.com" required autocomplete="email">
+                                <svg class="validation-icon valid-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <svg class="validation-icon invalid-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
                             <div class="error-message" id="clientEmailError">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
                                 <span>Please enter a valid email address</span>
+                            </div>
+                            <div class="email-hint">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span>We'll send your quote and invoice to this email</span>
                             </div>
                         </div>
                     </div>
@@ -2213,10 +2922,7 @@
                             Back to Services
                         </button>
                         <button class="btn btn-primary" id="generateInvoice">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                            </svg>
-                            Download Invoice PDF
+                            Get Quote
                         </button>
                     </div>
                 </div>
@@ -2326,7 +3032,7 @@
         // ============================================
         // CONFIGURATION - Backend API URL
         // ============================================
-        const API_BASE = 'https://api.edastra.in';
+        const API_BASE = 'http://localhost:3000';
         
         // Data loaded from API
         let eventsData = [];
@@ -2345,6 +3051,12 @@
 
         // Page Routing
         function showPage(pageName) {
+            // Reset form when leaving booking page
+            const currentPage = document.querySelector('.page.active');
+            if (currentPage && currentPage.id === 'pageBooking' && pageName !== 'booking') {
+                resetForm();
+            }
+            
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
             const targetPage = document.getElementById('page' + pageName.charAt(0).toUpperCase() + pageName.slice(1));
             if (targetPage) {
@@ -2477,7 +3189,6 @@
             eventsGrid.innerHTML = eventsData.map(event => `
                 <div class="event-card" data-event="${event.slug}" data-name="${event.name}">
                     <input type="checkbox" name="event" value="${event.slug}">
-                    <div class="event-icon">${event.icon || '📷'}</div>
                     <h3>${event.name}</h3>
                     <p>${event.description || ''}</p>
                     <div class="event-check">
@@ -2823,10 +3534,59 @@
             document.getElementById('toStep3').addEventListener('click', () => {
                 generateInvoicePreview();
                 goToStep(3);
+                // Focus email input when entering step 3
+                setTimeout(() => {
+                    document.getElementById('clientEmail').focus();
+                }, 300);
             });
 
             // Step 3 to 2
             document.getElementById('backToStep2').addEventListener('click', () => goToStep(2));
+
+            // Real-time email validation
+            const emailInput = document.getElementById('clientEmail');
+            const validIcon = document.querySelector('.email-input-container .valid-icon');
+            const invalidIcon = document.querySelector('.email-input-container .invalid-icon');
+            const generateBtn = document.getElementById('generateInvoice');
+            
+            emailInput.addEventListener('input', () => {
+                const email = emailInput.value.trim();
+                const errorElement = document.getElementById('clientEmailError');
+                
+                // Reset states
+                emailInput.classList.remove('valid', 'error');
+                validIcon.classList.remove('valid', 'invalid');
+                invalidIcon.classList.remove('valid', 'invalid');
+                errorElement.classList.remove('show');
+                
+                if (email.length === 0) {
+                    return;
+                }
+                
+                if (isValidEmail(email)) {
+                    emailInput.classList.add('valid');
+                    validIcon.classList.add('valid');
+                } else {
+                    if (email.includes('@')) {
+                        // Only show invalid state after @ is typed
+                        emailInput.classList.add('error');
+                        invalidIcon.classList.add('invalid');
+                    }
+                }
+            });
+            
+            emailInput.addEventListener('blur', () => {
+                const email = emailInput.value.trim();
+                const errorElement = document.getElementById('clientEmailError');
+                
+                if (email.length > 0 && !isValidEmail(email)) {
+                    emailInput.classList.add('error');
+                    invalidIcon.classList.add('invalid');
+                    validIcon.classList.remove('valid');
+                    errorElement.querySelector('span').textContent = 'Please enter a valid email address';
+                    errorElement.classList.add('show');
+                }
+            });
 
             // Click on step indicators to go back
             stepItems.forEach((item, index) => {
@@ -2856,7 +3616,7 @@
                             <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" opacity="0.25"></circle>
                             <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
-                        Sending...
+                        Generating Your Quote...
                     `;
                     
                     await generatePDF();
@@ -2936,7 +3696,6 @@
                     <div class="event-services-header">
                         <h3>${eventData.name}</h3>
                         <div class="event-date-display">
-                            <span class="date-label">📅</span>
                             <span class="date-value">${eventDate}</span>
                         </div>
                     </div>
@@ -3166,15 +3925,14 @@
                 });
             });
 
-            const tax = Math.round(subtotal * 0.18); // 18% GST
-            const total = subtotal + tax;
+            const total = subtotal;
 
-            return { subtotal, tax, total, items };
+            return { subtotal, total, items };
         }
 
         // Generate Services Preview
         function generateInvoicePreview() {
-            const { subtotal, tax, total, items } = calculateTotals();
+            const { subtotal, total, items } = calculateTotals();
 
             // Group items by event
             const groupedItems = {};
@@ -3229,7 +3987,6 @@
                 <div class="services-total-card">
                     <div class="services-total-info">
                         <span class="services-total-label">Grand Total</span>
-                        <span class="services-total-breakdown">Subtotal: ₹${subtotal.toLocaleString('en-IN')} + GST (18%): ₹${tax.toLocaleString('en-IN')}</span>
                     </div>
                     <span class="services-total-amount">₹${total.toLocaleString('en-IN')}</span>
                 </div>
@@ -3312,7 +4069,7 @@
             const margin = 20;
             let y = 0;
 
-            const { subtotal, tax, total, items } = calculateTotals();
+            const { subtotal, total, items } = calculateTotals();
             const today = new Date().toLocaleDateString('en-IN', { 
                 day: '2-digit', 
                 month: 'short', 
@@ -3480,18 +4237,6 @@
 
             // Totals
             const totalsX = pageWidth - margin - 70;
-            
-            doc.setTextColor(107, 107, 107);
-            doc.setFont('helvetica', 'normal');
-            doc.text('Subtotal', totalsX, y);
-            doc.setTextColor(44, 44, 44);
-            doc.text('Rs.' + subtotal.toLocaleString('en-IN'), pageWidth - margin - 25, y);
-            
-            y += 7;
-            doc.setTextColor(107, 107, 107);
-            doc.text('GST (18%)', totalsX, y);
-            doc.setTextColor(44, 44, 44);
-            doc.text('Rs.' + tax.toLocaleString('en-IN'), pageWidth - margin - 25, y);
             
             y += 3;
             doc.setDrawColor(201, 168, 124);
