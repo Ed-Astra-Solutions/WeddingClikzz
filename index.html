@@ -998,6 +998,115 @@
             color: var(--gold);
         }
 
+        /* Additional Services Section in Price Summary */
+        .additional-services-section {
+            margin-top: 1.25rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .additional-services-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--gold-light);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .additional-services-header svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--gold);
+        }
+
+        .additional-services-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .additional-service-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .additional-service-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(201, 168, 124, 0.3);
+        }
+
+        .additional-service-item.selected {
+            background: rgba(201, 168, 124, 0.15);
+            border-color: var(--gold);
+        }
+
+        .additional-service-item input {
+            display: none;
+        }
+
+        .additional-service-checkbox {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .additional-service-item.selected .additional-service-checkbox {
+            background: var(--gold);
+            border-color: var(--gold);
+        }
+
+        .additional-service-checkbox svg {
+            width: 10px;
+            height: 10px;
+            stroke: var(--charcoal);
+            stroke-width: 3;
+            opacity: 0;
+        }
+
+        .additional-service-item.selected .additional-service-checkbox svg {
+            opacity: 1;
+        }
+
+        .additional-service-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .additional-service-info h5 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--white);
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .additional-service-price {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--gold);
+            white-space: nowrap;
+        }
+
         @media (max-width: 1024px) {
             .step2-layout {
                 grid-template-columns: 1fr;
@@ -2064,11 +2173,7 @@
         /* Booking page - no hero, start from top */
         .page-booking {
             padding-top: 80px;
-            background-image: url('slider_1.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
+            background: var(--cream);
             min-height: 100vh;
         }
 
@@ -2480,8 +2585,6 @@
             .email-hint {
                 font-size: 0.75rem;
             }
-                font-size: 0.7rem;
-            }
 
             /* Services Preview */
             .services-preview {
@@ -2870,6 +2973,19 @@
                                 <span class="total-label">Total</span>
                                 <span class="total-amount" id="summaryTotalAmount">₹0</span>
                             </div>
+
+                            <!-- Additional Services Section -->
+                            <div class="additional-services-section" id="additionalServicesSection">
+                                <div class="additional-services-header">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                    </svg>
+                                    <span>Add-ons</span>
+                                </div>
+                                <div class="additional-services-list" id="additionalServicesList">
+                                    <!-- Additional services will be loaded here -->
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -3036,11 +3152,13 @@
         
         // Data loaded from API
         let eventsData = [];
+        let additionalServicesData = [];
         let eventNames = {};
 
         // State Management
         let selectedEvents = [];
         let selectedServices = {};
+        let selectedAdditionalServices = [];
         let eventDates = {};
         let customerDetails = {};
 
@@ -3143,6 +3261,7 @@
         document.addEventListener('DOMContentLoaded', async () => {
             initPageRouting();
             await loadEventsFromAPI();
+            await loadAdditionalServicesFromAPI();
             initNavigationHandlers();
             initScrollEffects();
         });
@@ -3166,6 +3285,71 @@
                 showToast('Failed to load events from server', 'error');
                 renderFallbackEvents();
             }
+        }
+
+        // Load additional services from API
+        async function loadAdditionalServicesFromAPI() {
+            try {
+                const response = await fetch(`${API_BASE}/api/additional-services`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    additionalServicesData = result.data;
+                    renderAdditionalServices();
+                }
+            } catch (error) {
+                console.error('Error loading additional services:', error);
+            }
+        }
+
+        // Render additional services in the sidebar
+        function renderAdditionalServices() {
+            const container = document.getElementById('additionalServicesList');
+            if (!container || additionalServicesData.length === 0) {
+                if (container) container.innerHTML = '<p style="color: rgba(255,255,255,0.5); font-size: 0.8rem; text-align: center;">No add-ons available</p>';
+                return;
+            }
+
+            container.innerHTML = additionalServicesData.map(service => `
+                <label class="additional-service-item" data-id="${service._id}" data-slug="${service.slug}" data-price="${service.price}" data-name="${service.name}">
+                    <input type="checkbox" name="additionalService" value="${service.slug}">
+                    <div class="additional-service-checkbox">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
+                    <div class="additional-service-info">
+                        <h5>${service.name}</h5>
+                    </div>
+                    <span class="additional-service-price">₹${service.price.toLocaleString('en-IN')}</span>
+                </label>
+            `).join('');
+
+            // Add event listeners for additional service selection
+            container.querySelectorAll('.additional-service-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    toggleAdditionalService(item);
+                });
+            });
+        }
+
+        // Toggle additional service selection
+        function toggleAdditionalService(item) {
+            const slug = item.dataset.slug;
+            const price = parseFloat(item.dataset.price);
+            const name = item.dataset.name;
+            const id = item.dataset.id;
+
+            if (item.classList.contains('selected')) {
+                item.classList.remove('selected');
+                selectedAdditionalServices = selectedAdditionalServices.filter(s => s.slug !== slug);
+            } else {
+                item.classList.add('selected');
+                selectedAdditionalServices.push({ id, slug, name, price });
+            }
+
+            updatePriceSummary();
         }
 
         // Render events from API data
@@ -3795,12 +3979,30 @@
                 }
             });
 
-            if (totalServices === 0) {
+            // Add additional services to breakdown
+            if (selectedAdditionalServices.length > 0) {
+                selectedAdditionalServices.forEach(service => {
+                    breakdownHTML += `
+                        <div class="price-breakdown-row">
+                            <span class="event-name">+ ${service.name}</span>
+                            <span class="event-price">₹${service.price.toLocaleString('en-IN')}</span>
+                        </div>
+                    `;
+                    grandTotal += service.price;
+                });
+            }
+
+            if (totalServices === 0 && selectedAdditionalServices.length === 0) {
                 breakdownContainer.innerHTML = '<span class="price-summary-empty">No services selected yet</span>';
                 itemCountEl.textContent = 'Select services to see pricing';
             } else {
                 breakdownContainer.innerHTML = breakdownHTML;
-                itemCountEl.innerHTML = `<span>${totalServices}</span> service${totalServices > 1 ? 's' : ''} selected`;
+                const addonsCount = selectedAdditionalServices.length;
+                let countText = `<span>${totalServices}</span> service${totalServices !== 1 ? 's' : ''}`;
+                if (addonsCount > 0) {
+                    countText += ` + <span>${addonsCount}</span> add-on${addonsCount !== 1 ? 's' : ''}`;
+                }
+                itemCountEl.innerHTML = countText;
             }
 
             totalAmountEl.textContent = `₹${grandTotal.toLocaleString('en-IN')}`;
@@ -3905,6 +4107,7 @@
         function calculateTotals() {
             let subtotal = 0;
             const items = [];
+            const additionalItems = [];
 
             selectedEvents.forEach(eventSlug => {
                 const eventData = eventsData.find(e => e.slug === eventSlug);
@@ -3925,9 +4128,18 @@
                 });
             });
 
+            // Add additional services
+            selectedAdditionalServices.forEach(service => {
+                subtotal += service.price;
+                additionalItems.push({
+                    name: service.name,
+                    price: service.price
+                });
+            });
+
             const total = subtotal;
 
-            return { subtotal, total, items };
+            return { subtotal, total, items, additionalItems };
         }
 
         // Generate Services Preview
@@ -3981,6 +4193,36 @@
                     </div>
                 `;
             });
+
+            // Add additional services card if any selected
+            if (additionalItems.length > 0) {
+                const addonsSubtotal = additionalItems.reduce((sum, s) => sum + s.price, 0);
+                html += `
+                    <div class="services-preview-card">
+                        <div class="services-preview-header" style="background: linear-gradient(135deg, var(--gold-dark), var(--gold));">
+                            <span class="services-preview-event">Add-ons</span>
+                            <span class="services-preview-date">Extra Services</span>
+                        </div>
+                        <div class="services-preview-list">
+                            ${additionalItems.map(service => `
+                                <div class="services-preview-item">
+                                    <span class="services-preview-item-name">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                        </svg>
+                                        ${service.name}
+                                    </span>
+                                    <span class="services-preview-item-price">₹${service.price.toLocaleString('en-IN')}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="services-preview-subtotal">
+                            <span class="services-preview-subtotal-label">Add-ons Subtotal</span>
+                            <span class="services-preview-subtotal-value">₹${addonsSubtotal.toLocaleString('en-IN')}</span>
+                        </div>
+                    </div>
+                `;
+            }
             
             // Add total card
             html += `
@@ -3997,7 +4239,7 @@
 
         // Submit quote to backend API
         async function submitQuote() {
-            const { items } = calculateTotals();
+            const { items, additionalItems } = calculateTotals();
             
             // Build items array for API with event IDs and dates
             const apiItems = [];
@@ -4024,6 +4266,13 @@
                 }
             });
 
+            // Build additional services array for API
+            const apiAdditionalServices = additionalItems.map(item => ({
+                additionalServiceId: item.id,
+                name: item.name,
+                price: item.price
+            }));
+
             try {
                 const response = await fetch(`${API_BASE}/api/quote`, {
                     method: 'POST',
@@ -4033,7 +4282,8 @@
                     body: JSON.stringify({
                         customerEmail: customerDetails.email,
                         customerName: customerDetails.name || '',
-                        items: apiItems
+                        items: apiItems,
+                        additionalServices: apiAdditionalServices
                     })
                 });
 
@@ -4233,6 +4483,36 @@
                 y += 3;
             });
 
+            // Add Additional Services section if any are selected
+            const { additionalItems } = calculateTotals();
+            if (additionalItems && additionalItems.length > 0) {
+                y += 5;
+                
+                // Additional Services Header
+                doc.setFillColor(201, 168, 124);
+                doc.rect(margin, y, pageWidth - (margin * 2), 8, 'F');
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(9);
+                doc.setFont('helvetica', 'bold');
+                doc.text('ADD-ON SERVICES', margin + 5, y + 5.5);
+                y += 12;
+
+                // Additional Services Items
+                doc.setFont('helvetica', 'normal');
+                additionalItems.forEach(addService => {
+                    doc.setTextColor(107, 107, 107);
+                    doc.text('    - ' + addService.name, margin + 10, y);
+                    doc.setTextColor(44, 44, 44);
+                    doc.text('Rs.' + addService.price.toLocaleString('en-IN'), pageWidth - margin - 25, y);
+                    
+                    // Separator line
+                    doc.setDrawColor(232, 213, 183);
+                    doc.setLineWidth(0.1);
+                    doc.line(margin, y + 3, pageWidth - margin, y + 3);
+                    y += 8;
+                });
+            }
+
             y += 5;
 
             // Totals
@@ -4307,6 +4587,7 @@
             selectedServices = {};
             eventDates = {};
             customerDetails = {};
+            selectedAdditionalServices = [];
 
             // Reset event cards
             eventCards.forEach(card => {
@@ -4315,6 +4596,11 @@
                 card.querySelector('input[type="checkbox"]').checked = false;
                 const dateDisplay = card.querySelector('.date-display');
                 if (dateDisplay) dateDisplay.textContent = '';
+            });
+
+            // Reset additional services selection
+            document.querySelectorAll('.additional-service-item').forEach(item => {
+                item.classList.remove('selected');
             });
 
             // Reset form fields
