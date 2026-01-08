@@ -4128,7 +4128,7 @@
 
         // Generate Services Preview
         function generateInvoicePreview() {
-            const { subtotal, total, items } = calculateTotals();
+            const { subtotal, total, items, additionalItems } = calculateTotals();
 
             // Group items by event
             const groupedItems = {};
