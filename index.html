@@ -292,35 +292,30 @@
             margin: 0 auto;
         }
 
-        /* Booking page header text colors for dark background */
+        /* Booking page header text colors for light background */
         .page-booking .section-header .section-label {
-            color: var(--gold-light);
+            color: var(--gold);
         }
 
         .page-booking .section-header .section-title {
-            color: var(--white);
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            color: var(--charcoal);
         }
 
         .page-booking .section-header .section-subtitle {
-            color: var(--gold-light);
-            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+            color: var(--text-light);
         }
 
         /* Inside booking container - white background, use dark text */
         .booking-container .section-header .section-label {
             color: var(--gold);
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
         }
 
         .booking-container .section-header .section-title {
             color: var(--charcoal);
-            text-shadow: 0 0 12px rgba(255, 255, 255, 0.9);
         }
 
         .booking-container .section-header .section-subtitle {
             color: var(--text-light);
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
         }
 
         /* Step Indicator */
@@ -393,32 +388,29 @@
             font-weight: 600;
         }
 
-        /* Booking page step indicator styles for dark background */
+        /* Booking page step indicator styles for light background */
         .page-booking .step-label {
-            color: var(--gold-light);
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+            color: var(--text-light);
         }
 
         .page-booking .step-item.active .step-label {
-            color: var(--white);
+            color: var(--gold-dark);
             font-weight: 600;
-            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
         }
 
         .page-booking .step-number {
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
-        /* Inactive step circles - dark background */
+        /* Inactive step circles - light background */
         .page-booking .step-item:not(.active):not(.completed) .step-number {
-            background: var(--charcoal);
-            border-color: var(--gold-dark);
+            background: var(--white);
+            border-color: var(--gold-light);
             color: var(--gold-light);
         }
 
         .page-booking .step-item:not(:last-child)::after {
-            background: rgba(232, 213, 183, 0.5);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            background: var(--gold-light);
         }
 
         .page-booking .step-item.active:not(:last-child)::after,
