@@ -1710,6 +1710,94 @@
             to { transform: rotate(360deg); }
         }
 
+        /* Terms & Conditions Section */
+        .terms-conditions-section {
+            background: var(--cream);
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(201, 168, 124, 0.3);
+        }
+
+        .terms-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(201, 168, 124, 0.2);
+        }
+
+        .terms-header svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--gold);
+            flex-shrink: 0;
+        }
+
+        .terms-header h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin: 0;
+        }
+
+        .terms-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .terms-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.6;
+            padding: 0.4rem 0;
+        }
+
+        .term-bullet {
+            color: var(--gold);
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        /* Quote Download Message */
+        .quote-download-message {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, rgba(201, 168, 124, 0.15), rgba(201, 168, 124, 0.08));
+            border: 2px dashed var(--gold);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            animation: pulse-border 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { border-color: var(--gold); }
+            50% { border-color: var(--gold-light); }
+        }
+
+        .quote-download-message svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--gold-dark);
+            flex-shrink: 0;
+        }
+
+        .quote-download-message span {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--gold-dark);
+            text-align: center;
+        }
+
         /* Services Preview for Step 3 */
         .services-preview {
             display: flex;
@@ -3014,6 +3102,30 @@
                         <!-- Services preview will be generated here -->
                     </div>
 
+                    <!-- Terms & Conditions Section -->
+                    <div class="terms-conditions-section">
+                        <div class="terms-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                            <h4>Terms & Conditions</h4>
+                        </div>
+                        <ul class="terms-list">
+                            <li><span class="term-bullet">*</span>10% advance payment required to confirm booking</li>
+                            <li><span class="term-bullet">*</span>Balance payment to be completed before the wedding date</li>
+                            <li><span class="term-bullet">*</span>Edited photos delivered within 15 days</li>
+                            <li><span class="term-bullet">*</span>Cinematic video delivered within 4 weeks</li>
+                            <li><span class="term-bullet">*</span>Travel and accommodation charges extra for outstation events</li>
+                        </ul>
+                    </div>
+
+                    <div class="quote-download-message">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <span>Please download the quote so that we can reach out to you with the best offer!</span>
+                    </div>
+
                     <div class="btn-container">
                         <button class="btn btn-secondary" id="backToStep2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -3022,6 +3134,9 @@
                             Back to Services
                         </button>
                         <button class="btn btn-primary" id="generateInvoice">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                            </svg>
                             Get Quote
                         </button>
                     </div>
@@ -4596,10 +4711,10 @@
             doc.setTextColor(107, 107, 107);
             
             const terms = [
-                '* 50% advance payment required to confirm booking',
-                '* Remaining balance due 7 days before the event',
-                '* All edited photos delivered within 10 working days',
-                '* Cinematic films delivered within 2-4 weeks',
+                '* 10% advance payment required to confirm booking',
+                '* Balance payment to be completed before the wedding date',
+                '* Edited photos delivered within 15 days',
+                '* Cinematic video delivered within 4 weeks',
                 '* Travel and accommodation charges extra for outstation events'
             ];
             
