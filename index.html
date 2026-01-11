@@ -3300,7 +3300,7 @@
                 </div>
                 <div class="step-item" data-step="3">
                     <div class="step-number">3</div>
-                    <div class="step-label">Review & Confirm</div>
+                    <div class="step-label">Quote & Summary</div>
                 </div>
             </div>
 
@@ -4130,61 +4130,39 @@
             // Step 2 to 1
             document.getElementById('backToStep1').addEventListener('click', () => goToStep(1));
 
-            // Step 2 to 3 (Review)
-            document.getElementById('toStep3').addEventListener('click', () => {
-                generateInvoicePreview();
-                goToStep(3);
-                // Focus email input when entering step 3
-                setTimeout(() => {
-                    document.getElementById('clientEmail').focus();
-                }, 300);
-            });
-
-            // Step 3 to 2
-            document.getElementById('backToStep2').addEventListener('click', () => goToStep(2));
-
-            // Real-time email validation
-            const emailInput = document.getElementById('clientEmail');
-            const validIcon = document.querySelector('.email-input-container .valid-icon');
-            const invalidIcon = document.querySelector('.email-input-container .invalid-icon');
-            const generateBtn = document.getElementById('generateInvoice');
+            // Email validation for Step 2
+            const step2EmailInput = document.getElementById('step2Email');
+            const getQuoteBtn = document.getElementById('summaryGetQuote');
             
-            emailInput.addEventListener('input', () => {
-                const email = emailInput.value.trim();
-                const errorElement = document.getElementById('clientEmailError');
+            step2EmailInput.addEventListener('input', () => {
+                const email = step2EmailInput.value.trim();
+                const errorElement = document.getElementById('step2EmailError');
                 
                 // Reset states
-                emailInput.classList.remove('valid', 'error');
-                validIcon.classList.remove('valid', 'invalid');
-                invalidIcon.classList.remove('valid', 'invalid');
-                errorElement.classList.remove('show');
+                step2EmailInput.classList.remove('valid', 'error');
+                errorElement.style.display = 'none';
                 
                 if (email.length === 0) {
+                    updateGetQuoteButton();
                     return;
                 }
                 
                 if (isValidEmail(email)) {
-                    emailInput.classList.add('valid');
-                    validIcon.classList.add('valid');
-                } else {
-                    if (email.includes('@')) {
-                        // Only show invalid state after @ is typed
-                        emailInput.classList.add('error');
-                        invalidIcon.classList.add('invalid');
-                    }
+                    step2EmailInput.classList.add('valid');
+                } else if (email.includes('@')) {
+                    step2EmailInput.classList.add('error');
                 }
+                
+                updateGetQuoteButton();
             });
             
-            emailInput.addEventListener('blur', () => {
-                const email = emailInput.value.trim();
-                const errorElement = document.getElementById('clientEmailError');
+            step2EmailInput.addEventListener('blur', () => {
+                const email = step2EmailInput.value.trim();
+                const errorElement = document.getElementById('step2EmailError');
                 
                 if (email.length > 0 && !isValidEmail(email)) {
-                    emailInput.classList.add('error');
-                    invalidIcon.classList.add('invalid');
-                    validIcon.classList.remove('valid');
-                    errorElement.querySelector('span').textContent = 'Please enter a valid email address';
-                    errorElement.classList.add('show');
+                    step2EmailInput.classList.add('error');
+                    errorElement.style.display = 'block';
                 }
             });
 
@@ -4195,8 +4173,8 @@
                     const clickedStep = index + 1;
                     const currentStep = getCurrentStep();
                     
-                    // Only allow going back to previous/completed steps
-                    if (clickedStep < currentStep) {
+                    // Only allow going back to previous/completed steps (not Step 3 which is the result)
+                    if (clickedStep < currentStep && clickedStep <= 2) {
                         if (clickedStep === 2) {
                             generateServicesForEvents();
                         }
@@ -4205,29 +4183,140 @@
                 });
             });
 
-            // Generate Invoice (with email validation)
-            document.getElementById('generateInvoice').addEventListener('click', async () => {
-                if (validateCustomerDetails()) {
-                    const btn = document.getElementById('generateInvoice');
-                    const originalHTML = btn.innerHTML;
-                    btn.disabled = true;
-                    btn.innerHTML = `
-                        <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" opacity="0.25"></circle>
-                            <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Generating Your Quote...
-                    `;
-                    
-                    await generatePDF();
-                    
-                    btn.disabled = false;
-                    btn.innerHTML = originalHTML;
+            // Get Quote button in Step 2 floating card
+            document.getElementById('summaryGetQuote').addEventListener('click', async () => {
+                const email = document.getElementById('step2Email').value.trim();
+                
+                if (!isValidEmail(email)) {
+                    document.getElementById('step2Email').classList.add('error');
+                    document.getElementById('step2EmailError').style.display = 'block';
+                    document.getElementById('step2Email').focus();
+                    return;
                 }
+                
+                // Check all events have services selected
+                const allEventsHaveServices = selectedEvents.every(eventSlug => {
+                    const services = selectedServices[eventSlug] || [];
+                    return services.length > 0;
+                });
+                
+                if (!allEventsHaveServices) {
+                    showToast('Please select at least one service for each event', 'error');
+                    return;
+                }
+                
+                // Store email in customerDetails
+                customerDetails.email = email;
+                
+                const btn = document.getElementById('summaryGetQuote');
+                const originalHTML = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = `
+                    <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" opacity="0.25"></circle>
+                        <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Generating Quote...
+                `;
+                
+                try {
+                    await generatePDF();
+                    // Generate price breakdown for Step 3
+                    generatePriceBreakdown();
+                    // Show email in Step 3
+                    document.getElementById('confirmEmailDisplay').textContent = email;
+                    // Go to Step 3
+                    goToStep(3);
+                } catch (error) {
+                    console.error('Error generating quote:', error);
+                    showToast('Error generating quote. Please try again.', 'error');
+                }
+                
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+                updateGetQuoteButton();
             });
 
             // Start Over
             document.getElementById('startOver').addEventListener('click', resetForm);
+        }
+        
+        // Update Get Quote button state
+        function updateGetQuoteButton() {
+            const email = document.getElementById('step2Email').value.trim();
+            const isEmailValid = isValidEmail(email);
+            
+            // Check all events have at least one service
+            const allEventsHaveServices = selectedEvents.every(eventSlug => {
+                const services = selectedServices[eventSlug] || [];
+                return services.length > 0;
+            });
+            
+            const btn = document.getElementById('summaryGetQuote');
+            btn.disabled = !(isEmailValid && allEventsHaveServices);
+        }
+        
+        // Generate price breakdown for Step 3
+        function generatePriceBreakdown() {
+            const container = document.getElementById('quotePriceBreakdown');
+            const totalEl = document.getElementById('quoteTotalAmount');
+            
+            let html = '';
+            let grandTotal = 0;
+            
+            selectedEvents.forEach(eventSlug => {
+                const eventData = eventsData.find(e => e.slug === eventSlug);
+                if (!eventData) return;
+                
+                const eventServices = selectedServices[eventSlug] || [];
+                const eventAddons = selectedAdditionalServices[eventSlug] || [];
+                let eventTotal = 0;
+                
+                const eventDate = eventDates[eventSlug] 
+                    ? new Date(eventDates[eventSlug]).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })
+                    : '';
+                
+                html += `<div class="quote-event-block">`;
+                html += `<div class="quote-event-name">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    ${eventData.name}
+                    <span class="quote-event-date">${eventDate}</span>
+                </div>`;
+                
+                // Services
+                eventServices.forEach(serviceSlug => {
+                    const service = eventData.services.find(s => s.slug === serviceSlug);
+                    if (service) {
+                        eventTotal += service.price;
+                        html += `<div class="quote-service-row">
+                            <span class="quote-service-name">${service.name}</span>
+                            <span class="quote-service-price">₹${service.price.toLocaleString('en-IN')}</span>
+                        </div>`;
+                    }
+                });
+                
+                // Add-ons
+                eventAddons.forEach(addon => {
+                    eventTotal += addon.price;
+                    html += `<div class="quote-service-row">
+                        <span class="quote-service-name">${addon.name} (Add-on)</span>
+                        <span class="quote-service-price">₹${addon.price.toLocaleString('en-IN')}</span>
+                    </div>`;
+                });
+                
+                html += `<div class="quote-event-subtotal">
+                    <span>Subtotal</span>
+                    <span>₹${eventTotal.toLocaleString('en-IN')}</span>
+                </div>`;
+                html += `</div>`;
+                
+                grandTotal += eventTotal;
+            });
+            
+            container.innerHTML = html;
+            totalEl.textContent = `₹${grandTotal.toLocaleString('en-IN')}`;
         }
 
         function goToStep(step) {
@@ -4363,9 +4452,7 @@
         // Update Price Summary
         function updatePriceSummary() {
             const breakdownContainer = document.getElementById('summaryBreakdown');
-            const totalAmountEl = document.getElementById('summaryTotalAmount');
             const itemCountEl = document.getElementById('summaryItemCount');
-            const totalSection = document.getElementById('summaryTotalSection');
             
             let totalServices = 0;
             let breakdownHTML = '';
@@ -4418,12 +4505,9 @@
                 totalAddons += addons.length;
             });
 
-            const totalItems = totalServices + totalAddons;
-
             if (totalServices === 0 && totalAddons === 0) {
                 breakdownContainer.innerHTML = '<span class="price-summary-empty">No services selected yet</span>';
                 itemCountEl.textContent = 'Select services to continue';
-                totalSection.style.display = 'none';
             } else {
                 breakdownContainer.innerHTML = breakdownHTML;
                 let countText = `<span>${totalServices}</span> service${totalServices !== 1 ? 's' : ''}`;
@@ -4431,28 +4515,13 @@
                     countText += ` + <span>${totalAddons}</span> add-on${totalAddons !== 1 ? 's' : ''}`;
                 }
                 itemCountEl.innerHTML = countText + ' selected';
-                totalSection.style.display = 'flex';
-                totalAmountEl.textContent = totalItems;
             }
+            
+            // Update Get Quote button state
+            updateGetQuoteButton();
         }
 
         function updateStep3Button() {
-            // Check that EVERY selected event has at least one service
-            const allEventsHaveServices = selectedEvents.length > 0 && 
-                selectedEvents.every(eventSlug => {
-                    const services = selectedServices[eventSlug] || [];
-                    return services.length > 0;
-                });
-            
-            const toStep3Btn = document.getElementById('toStep3');
-            toStep3Btn.disabled = !allEventsHaveServices;
-            
-            // Show which events are missing services
-            const eventsWithoutServices = selectedEvents.filter(eventSlug => {
-                const services = selectedServices[eventSlug] || [];
-                return services.length === 0;
-            });
-            
             // Update visual feedback on event sections
             document.querySelectorAll('.event-services-group').forEach(group => {
                 const eventSlug = group.dataset.event;
@@ -4463,6 +4532,9 @@
                     warningEl.style.display = hasServices ? 'none' : 'flex';
                 }
             });
+            
+            // Update Get Quote button state
+            updateGetQuoteButton();
         }
 
         // Validate Customer Details
@@ -5043,10 +5115,26 @@
                 showToast('Invoice downloaded successfully!', 'success');
             }
             
-            // Show success step with email
+            // Show success step with email and price breakdown
             document.getElementById('confirmEmailDisplay').textContent = customerDetails.email;
+            generatePriceBreakdown();
+            
+            // Update step indicators
+            stepItems.forEach((item, index) => {
+                item.classList.remove('active', 'completed');
+                if (index + 1 < 3) {
+                    item.classList.add('completed');
+                } else if (index + 1 === 3) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Go to step 3
             formSections.forEach(section => section.classList.remove('active'));
-            document.getElementById('successStep').classList.add('active');
+            document.getElementById('step3').classList.add('active');
+            
+            // Scroll to top of form
+            document.getElementById('booking').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         // Reset Form
@@ -5072,11 +5160,13 @@
             });
 
             // Reset form fields
-            document.getElementById('clientEmail').value = '';
+            const step2EmailEl = document.getElementById('step2Email');
+            if (step2EmailEl) step2EmailEl.value = '';
 
             // Reset buttons
             document.getElementById('toStep2').disabled = true;
-            document.getElementById('toStep3').disabled = true;
+            const summaryGetQuote = document.getElementById('summaryGetQuote');
+            if (summaryGetQuote) summaryGetQuote.disabled = true;
 
             // Clear any errors
             clearAllErrors();
