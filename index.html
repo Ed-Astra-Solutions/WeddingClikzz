@@ -968,6 +968,60 @@
             padding: 1rem 0;
         }
 
+        /* Selection Summary Styles */
+        .selection-summary-event {
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .selection-summary-event:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .selection-event-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .selection-event-header svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--gold);
+            flex-shrink: 0;
+        }
+
+        .selection-event-header .event-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--gold);
+        }
+
+        .selection-services-list {
+            list-style: none;
+            margin: 0;
+            padding: 0 0 0 1.5rem;
+        }
+
+        .selection-services-list li {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 0.25rem 0;
+            position: relative;
+        }
+
+        .selection-services-list li::before {
+            content: '✓';
+            color: var(--gold-light);
+            position: absolute;
+            left: -1rem;
+            font-size: 0.7rem;
+        }
+
         .price-summary-total {
             padding-top: 1rem;
             border-top: 2px solid var(--gold);
@@ -984,10 +1038,277 @@
         }
 
         .price-summary-total .total-amount {
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.75rem;
             font-weight: 700;
             color: var(--gold);
+        }
+
+        /* Summary Email Section in Step 2 */
+        .summary-email-section {
+            margin-top: 1.25rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .summary-email-section label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .summary-email-input input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            transition: all 0.3s ease;
+        }
+
+        .summary-email-input input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .summary-email-input input:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .summary-email-input input.valid {
+            border-color: var(--success);
+            background: rgba(76, 175, 80, 0.15);
+        }
+
+        .summary-email-input input.error {
+            border-color: var(--error);
+            background: rgba(229, 57, 53, 0.15);
+        }
+
+        .summary-email-error {
+            color: #FCA5A5;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .summary-get-quote {
+            width: 100%;
+            margin-top: 1.25rem;
+            justify-content: center;
+        }
+
+        .summary-get-quote:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Step 3 Quote Success Styles */
+        .quote-success-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            background: linear-gradient(135deg, var(--success), #45a049);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            color: var(--white);
+        }
+
+        .success-icon-small {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .success-icon-small svg {
+            width: 32px;
+            height: 32px;
+            stroke: var(--white);
+        }
+
+        .quote-success-content h3 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            color: var(--white);
+        }
+
+        .quote-success-content p {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .quote-success-content strong {
+            color: var(--white);
+        }
+
+        /* Quote Price Summary Card */
+        .quote-price-summary {
+            background: linear-gradient(135deg, var(--charcoal), #1a1a1a);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            color: var(--white);
+        }
+
+        .quote-price-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .quote-price-header svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--gold);
+        }
+
+        .quote-price-header h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            color: var(--white);
+            margin: 0;
+        }
+
+        .quote-price-breakdown {
+            margin-bottom: 1.5rem;
+        }
+
+        .quote-event-block {
+            margin-bottom: 1.25rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .quote-event-block:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .quote-event-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gold);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quote-event-name svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--gold);
+        }
+
+        .quote-event-date {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-left: auto;
+        }
+
+        .quote-service-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .quote-service-name {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .quote-service-price {
+            font-size: 0.95rem;
+            color: var(--gold-light);
+            font-weight: 600;
+        }
+
+        .quote-event-subtotal {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0 0;
+            margin-top: 0.5rem;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .quote-event-subtotal span:first-child {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .quote-event-subtotal span:last-child {
+            font-size: 1rem;
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        .quote-price-total {
+            padding-top: 1.5rem;
+            border-top: 2px solid var(--gold);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quote-total-label {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .quote-total-amount {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        /* Quote Next Steps Message */
+        .quote-next-steps {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, rgba(201, 168, 124, 0.15), rgba(201, 168, 124, 0.08));
+            border: 1px solid var(--gold-light);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .quote-next-steps svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--gold);
+            flex-shrink: 0;
+        }
+
+        .quote-next-steps span {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            text-align: center;
         }
 
         /* Event Add-ons Section Styles */
@@ -3031,75 +3352,76 @@
                                     </svg>
                                     Back to Events
                                 </button>
-                                <button class="btn btn-primary" id="toStep3" disabled>
-                                    Review & Confirm
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                                    </svg>
-                                </button>
                             </div>
                         </div>
 
-                        <!-- Floating Price Summary Card -->
+                        <!-- Floating Selection Summary Card -->
                         <div class="price-summary-card" id="priceSummaryCard">
                             <div class="price-summary-header">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
                                 </svg>
-                                <h4>Price Summary</h4>
+                                <h4>Your Selections</h4>
                             </div>
                             <div class="price-summary-count" id="summaryItemCount">
-                                Select services to see pricing
+                                Select services to continue
                             </div>
                             <div class="price-summary-breakdown" id="summaryBreakdown">
                                 <span class="price-summary-empty">No services selected yet</span>
                             </div>
-                            <div class="price-summary-total">
-                                <span class="total-label">Total</span>
-                                <span class="total-amount" id="summaryTotalAmount">₹0</span>
+                            
+                            <!-- Email Input Section -->
+                            <div class="summary-email-section" id="summaryEmailSection">
+                                <label>Your Email <span style="color: #FCA5A5;">*</span></label>
+                                <div class="summary-email-input">
+                                    <input type="email" id="step2Email" placeholder="your@email.com" required autocomplete="email">
+                                </div>
+                                <div class="summary-email-error" id="step2EmailError" style="display: none;">
+                                    Please enter a valid email address
+                                </div>
                             </div>
+                            
+                            <!-- Get Quote Button -->
+                            <button class="btn btn-primary summary-get-quote" id="summaryGetQuote" disabled>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                </svg>
+                                Get Quote
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Step 3: Review & Invoice -->
+                <!-- Step 3: Quote Generated - Price Summary -->
                 <div class="form-section" id="step3">
-                    <!-- Review Header with Email Input -->
-                    <div class="review-header-card">
-                        <h3>Almost There!</h3>
-                        <p>Review your selections below and enter your email to receive your personalized quote.</p>
-                        
-                        <div class="review-email-section">
-                            <label>Your Email Address <span style="color: #FCA5A5;">*</span></label>
-                            <div class="email-input-container">
-                                <svg class="email-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                                </svg>
-                                <input type="email" id="clientEmail" placeholder="your@email.com" required autocomplete="email">
-                                <svg class="validation-icon valid-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                                <svg class="validation-icon invalid-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                            </div>
-                            <div class="error-message" id="clientEmailError">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                                <span>Please enter a valid email address</span>
-                            </div>
-                            <div class="email-hint">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                                <span>We'll send your quote and invoice to this email</span>
-                            </div>
+                    <!-- Success Header -->
+                    <div class="quote-success-header">
+                        <div class="success-icon-small">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <div class="quote-success-content">
+                            <h3>Quote Generated Successfully!</h3>
+                            <p>Your personalized quote has been sent to <strong id="confirmEmailDisplay"></strong></p>
                         </div>
                     </div>
 
-                    <div class="services-preview" id="servicesPreview">
-                        <!-- Services preview will be generated here -->
+                    <!-- Price Summary Card -->
+                    <div class="quote-price-summary">
+                        <div class="quote-price-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                            </svg>
+                            <h4>Your Price Summary</h4>
+                        </div>
+                        <div class="quote-price-breakdown" id="quotePriceBreakdown">
+                            <!-- Price breakdown will be generated here -->
+                        </div>
+                        <div class="quote-price-total">
+                            <span class="quote-total-label">Total Amount</span>
+                            <span class="quote-total-amount" id="quoteTotalAmount">₹0</span>
+                        </div>
                     </div>
 
                     <!-- Terms & Conditions Section -->
@@ -3119,39 +3441,15 @@
                         </ul>
                     </div>
 
-                    <div class="quote-download-message">
+                    <!-- Next Steps Message -->
+                    <div class="quote-next-steps">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
-                        <span>Please download the quote so that we can reach out to you with the best offer!</span>
+                        <span>Our team will reach out to you shortly with the best offer. Check your email for the detailed quote!</span>
                     </div>
 
                     <div class="btn-container">
-                        <button class="btn btn-secondary" id="backToStep2">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/>
-                            </svg>
-                            Back to Services
-                        </button>
-                        <button class="btn btn-primary" id="generateInvoice">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                            </svg>
-                            Get Quote
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Success State -->
-                <div class="form-section" id="successStep">
-                    <div class="success-container">
-                        <div class="success-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-                            </svg>
-                        </div>
-                        <h2>Quote Sent Successfully!</h2>
-                        <p>Your invoice has been generated and downloaded. We've also sent a copy to <strong id="confirmEmailDisplay"></strong>. Our team will get in touch with you shortly.</p>
                         <button class="btn btn-primary" id="startOver">
                             Start New Booking
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -3439,7 +3737,6 @@
                                     <div class="addon-info">
                                         <h5>${service.name}</h5>
                                     </div>
-                                    <span class="addon-price">₹${service.price.toLocaleString('en-IN')}</span>
                                 </div>
                             `;
                         }).join('')}
@@ -4016,7 +4313,6 @@
                                     <h4>${service.name}</h4>
                                     <p>${service.description || ''}</p>
                                 </div>
-                                <div class="service-price">₹${service.price.toLocaleString('en-IN')}</div>
                             </div>
                         `).join('')}
                     </div>
@@ -4069,8 +4365,8 @@
             const breakdownContainer = document.getElementById('summaryBreakdown');
             const totalAmountEl = document.getElementById('summaryTotalAmount');
             const itemCountEl = document.getElementById('summaryItemCount');
+            const totalSection = document.getElementById('summaryTotalSection');
             
-            let grandTotal = 0;
             let totalServices = 0;
             let breakdownHTML = '';
 
@@ -4078,35 +4374,41 @@
                 const eventData = eventsData.find(e => e.slug === eventSlug);
                 if (!eventData) return;
 
-                let eventTotal = 0;
                 const eventServices = selectedServices[eventSlug] || [];
+                const eventAddons = selectedAdditionalServices[eventSlug] || [];
+                
+                // Count services for this event
+                let eventServiceCount = 0;
+                const serviceNames = [];
                 
                 eventServices.forEach(serviceSlug => {
                     const service = eventData.services.find(s => s.slug === serviceSlug);
                     if (service) {
-                        eventTotal += service.price;
+                        eventServiceCount++;
                         totalServices++;
+                        serviceNames.push(service.name);
                     }
                 });
 
-                // Add event's add-ons to the event total
-                const eventAddons = selectedAdditionalServices[eventSlug] || [];
+                // Add add-on names
                 eventAddons.forEach(addon => {
-                    eventTotal += addon.price;
+                    serviceNames.push(addon.name + ' (Add-on)');
                 });
 
-                if (eventTotal > 0) {
-                    let eventLabel = eventData.name;
-                    if (eventAddons.length > 0) {
-                        eventLabel += ` (+${eventAddons.length} add-on${eventAddons.length > 1 ? 's' : ''})`;
-                    }
+                if (serviceNames.length > 0) {
                     breakdownHTML += `
-                        <div class="price-breakdown-row">
-                            <span class="event-name">${eventLabel}</span>
-                            <span class="event-price">₹${eventTotal.toLocaleString('en-IN')}</span>
+                        <div class="selection-summary-event">
+                            <div class="selection-event-header">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16" height="16">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                <span class="event-name">${eventData.name}</span>
+                            </div>
+                            <ul class="selection-services-list">
+                                ${serviceNames.map(name => `<li>${name}</li>`).join('')}
+                            </ul>
                         </div>
                     `;
-                    grandTotal += eventTotal;
                 }
             });
 
@@ -4116,19 +4418,22 @@
                 totalAddons += addons.length;
             });
 
+            const totalItems = totalServices + totalAddons;
+
             if (totalServices === 0 && totalAddons === 0) {
                 breakdownContainer.innerHTML = '<span class="price-summary-empty">No services selected yet</span>';
-                itemCountEl.textContent = 'Select services to see pricing';
+                itemCountEl.textContent = 'Select services to continue';
+                totalSection.style.display = 'none';
             } else {
                 breakdownContainer.innerHTML = breakdownHTML;
                 let countText = `<span>${totalServices}</span> service${totalServices !== 1 ? 's' : ''}`;
                 if (totalAddons > 0) {
                     countText += ` + <span>${totalAddons}</span> add-on${totalAddons !== 1 ? 's' : ''}`;
                 }
-                itemCountEl.innerHTML = countText;
+                itemCountEl.innerHTML = countText + ' selected';
+                totalSection.style.display = 'flex';
+                totalAmountEl.textContent = totalItems;
             }
-
-            totalAmountEl.textContent = `₹${grandTotal.toLocaleString('en-IN')}`;
         }
 
         function updateStep3Button() {
