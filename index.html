@@ -1141,7 +1141,7 @@
         .summary-get-quote:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            pointer-events: auto !important;
+            pointer-events: none;
         }
 
         /* Step 3 Quote Success Styles */
@@ -2012,7 +2012,8 @@
         }
 
         .btn-wrapper {
-            display: inline-block;
+            display: block;
+            width: 100%;
             cursor: pointer;
         }
 
@@ -3549,12 +3550,14 @@
                             </div>
                             
                             <!-- Get Quote Button -->
-                            <button class="btn btn-primary summary-get-quote" id="summaryGetQuote" disabled>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                                </svg>
-                                Get Quote
-                            </button>
+                            <div id="summaryGetQuoteWrapper" class="btn-wrapper">
+                                <button class="btn btn-primary summary-get-quote" id="summaryGetQuote" disabled>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                    </svg>
+                                    Get Quote
+                                </button>
+                            </div>
                         </div>
                     </div>
                     
@@ -4401,8 +4404,12 @@
             });
 
             // Get Quote button in Step 2 floating card
-            document.getElementById('summaryGetQuote').addEventListener('click', async (e) => {
-                const btn = e.currentTarget;
+            const getQuoteBtnEl = document.getElementById('summaryGetQuote');
+            const getQuoteWrapper = document.getElementById('summaryGetQuoteWrapper');
+            
+            // Use wrapper to capture clicks even when button is disabled
+            getQuoteWrapper.addEventListener('click', async (e) => {
+                const btn = getQuoteBtnEl;
                 const email = document.getElementById('step2Email').value.trim();
                 
                 // Check all events have services selected
@@ -4424,7 +4431,16 @@
                         if (eventWithoutServices) {
                             const eventBlock = document.querySelector(`.event-services-block[data-event="${eventWithoutServices}"]`);
                             if (eventBlock) {
-                                eventBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                // Scroll to the event block with offset for header
+                                const headerOffset = 100;
+                                const elementPosition = eventBlock.getBoundingClientRect().top;
+                                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                                
+                                window.scrollTo({
+                                    top: offsetPosition,
+                                    behavior: 'smooth'
+                                });
+                                
                                 eventBlock.style.boxShadow = '0 0 0 3px var(--error)';
                                 setTimeout(() => {
                                     eventBlock.style.boxShadow = '';
@@ -4434,10 +4450,19 @@
                         showToast('Please select at least one service for each event', 'error');
                     } else if (!isValidEmail(email)) {
                         // Email error - scroll to email input
-                        document.getElementById('step2Email').classList.add('error');
+                        const emailInput = document.getElementById('step2Email');
+                        const headerOffset = 100;
+                        const elementPosition = emailInput.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                        
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                        
+                        emailInput.classList.add('error');
                         document.getElementById('step2EmailError').style.display = 'block';
-                        document.getElementById('step2Email').focus();
-                        document.getElementById('step2Email').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        setTimeout(() => emailInput.focus(), 500); // Focus after scroll
                         showToast('Please enter a valid email address', 'error');
                     }
                     return;
