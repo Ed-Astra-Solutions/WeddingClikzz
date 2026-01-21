@@ -18,6 +18,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <!-- Google reCAPTCHA v3 -->
+    <script src="https://www.google.com/recaptcha/api.js?render=6LevLlIsAAAAACA4B0mAG0wvTCNnubTNA-OgUgai"></script>
     <style>
         :root {
             --gold: #C9A87C;
@@ -142,6 +144,28 @@
 
         nav a:hover::after {
             width: 100%;
+        }
+
+        /* Mobile Contact Button */
+        .mobile-contact-btn {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 0.25rem;
+            color: var(--white);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .mobile-contact-btn:hover {
+            color: var(--gold);
+        }
+
+        .mobile-contact-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
         }
 
         /* Hero Section */
@@ -1117,6 +1141,7 @@
         .summary-get-quote:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            pointer-events: auto !important;
         }
 
         /* Step 3 Quote Success Styles */
@@ -1986,6 +2011,15 @@
             border-top: 1px solid rgba(201, 168, 124, 0.2);
         }
 
+        .btn-wrapper {
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .btn-wrapper .btn:disabled {
+            pointer-events: none;
+        }
+
         .btn {
             padding: 1rem 2rem;
             border-radius: 50px;
@@ -2545,18 +2579,24 @@
             position: fixed;
             bottom: 2rem;
             right: 2rem;
-            padding: 1rem 1.5rem;
-            background: var(--charcoal);
+            padding: 1.25rem 1.75rem;
+            background: linear-gradient(135deg, var(--charcoal), #1a1a1a);
             color: var(--white);
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-radius: 14px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
             display: flex;
             align-items: center;
             gap: 0.75rem;
             transform: translateY(100px);
             opacity: 0;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 2000;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            border: 1px solid rgba(201, 168, 124, 0.3);
+            max-width: 400px;
         }
 
         .toast.show {
@@ -2565,11 +2605,43 @@
         }
 
         .toast.success {
-            background: var(--success);
+            background: linear-gradient(135deg, var(--charcoal), #1a1a1a);
+            border-left: 4px solid var(--gold);
+        }
+
+        .toast.success::before {
+            content: '✓';
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            border-radius: 50%;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--white);
+            flex-shrink: 0;
         }
 
         .toast.error {
-            background: var(--error);
+            background: linear-gradient(135deg, var(--charcoal), #1a1a1a);
+            border-left: 4px solid #E57373;
+        }
+
+        .toast.error::before {
+            content: '!';
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #E57373, #C62828);
+            border-radius: 50%;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--white);
+            flex-shrink: 0;
         }
 
         /* Page Routing System */
@@ -2713,6 +2785,10 @@
 
             nav ul {
                 display: none;
+            }
+
+            .mobile-contact-btn {
+                display: flex;
             }
 
             .logo h1 {
@@ -3189,14 +3265,61 @@
             .footer-content {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
+                text-align: center;
+            }
+
+            .footer-brand {
+                order: 1;
             }
 
             .footer-brand h3 {
-                font-size: 1.2rem;
+                font-size: 1.5rem;
+            }
+
+            .footer-brand p {
+                max-width: 100%;
+                margin: 0 auto;
+                font-size: 0.85rem;
+                padding: 0 0.5rem;
+            }
+
+            .footer-links {
+                order: 2;
+            }
+
+            .footer-links h4 {
+                font-size: 0.9rem;
+                margin-bottom: 1rem;
+            }
+
+            .footer-links li {
+                margin-bottom: 0.5rem;
+            }
+
+            .footer-links a {
+                font-size: 0.85rem;
+                word-break: break-word;
             }
 
             .footer-logo {
+                order: 0;
                 justify-content: center;
+            }
+
+            .footer-logo img {
+                height: 80px !important;
+            }
+
+            footer {
+                padding: 2rem 1rem 1.5rem;
+            }
+
+            .footer-bottom {
+                padding-top: 1.25rem;
+            }
+
+            .footer-bottom p {
+                font-size: 0.75rem;
             }
 
             /* Toast */
@@ -3259,6 +3382,30 @@
                 padding: 0.75rem 1rem;
             }
         }
+
+        /* Hide reCAPTCHA badge - required attribution is in footer */
+        .grecaptcha-badge {
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        .recaptcha-notice {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-align: center;
+            margin-top: 1rem;
+            line-height: 1.5;
+        }
+
+        .recaptcha-notice a {
+            color: var(--gold-light);
+            text-decoration: none;
+        }
+
+        .recaptcha-notice a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -3274,6 +3421,11 @@
                     <li><a href="#footer" id="contactLink">Contact</a></li>
                 </ul>
             </nav>
+            <a href="#footer" class="mobile-contact-btn" id="mobileContactLink" title="Contact Us">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+            </a>
         </div>
     </header>
 
@@ -3284,7 +3436,7 @@
                 <div class="hero-badge">Premium Wedding Photography</div>
                 <h1>Book Your <span>Perfect</span><br>Wedding Coverage</h1>
                 <p>Select your events, choose your services, and receive a professional invoice instantly. Let us capture every precious moment of your special day.</p>
-                <a href="#" class="hero-cta" id="startBookingBtn">
+                <a href="javascript:void(0)" class="hero-cta" id="startBookingBtn">
                     Start Booking
                 </a>
             </div>
@@ -3336,12 +3488,14 @@
 
                     <div class="btn-container">
                         <div></div>
-                        <button class="btn btn-primary" id="toStep2" disabled>
-                            Continue to Services
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                            </svg>
-                        </button>
+                        <div id="toStep2Wrapper" class="btn-wrapper">
+                            <button class="btn btn-primary" id="toStep2" disabled>
+                                Continue to Services
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -3403,6 +3557,11 @@
                             </button>
                         </div>
                     </div>
+                    
+                    <!-- reCAPTCHA Notice - below the card -->
+                    <p class="recaptcha-notice" style="margin-top: 1rem; text-align: center; color: var(--text-light);">
+                        Protected by reCAPTCHA. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener" style="color: var(--gold-dark);">Privacy</a> · <a href="https://policies.google.com/terms" target="_blank" rel="noopener" style="color: var(--gold-dark);">Terms</a>
+                    </p>
                 </div>
 
                 <!-- Step 3: Quote Generated - Price Summary -->
@@ -3498,7 +3657,12 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 WeddingClickz Photography. All rights reserved.</p>
+            <p>&copy; 2026 WeddingClickz Photography. All rights reserved.</p>
+            <p class="recaptcha-notice">
+                This site is protected by reCAPTCHA and the Google 
+                <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Privacy Policy</a> and 
+                <a href="https://policies.google.com/terms" target="_blank" rel="noopener">Terms of Service</a> apply.
+            </p>
         </div>
     </footer>
 
@@ -3560,6 +3724,9 @@
         // ============================================
         const API_BASE = 'https://api.edastra.in';
         
+        // Google reCAPTCHA v3 Site Key
+        const RECAPTCHA_SITE_KEY = '6LevLlIsAAAAACA4B0mAG0wvTCNnubTNA-OgUgai';
+        
         // Data loaded from API
         let eventsData = [];
         let additionalServicesData = [];
@@ -3578,11 +3745,15 @@
         const formSections = document.querySelectorAll('.form-section');
 
         // Page Routing
-        function showPage(pageName) {
+        function showPage(pageName, pushState = true) {
             // Reset form when leaving booking page
             const currentPage = document.querySelector('.page.active');
             if (currentPage && currentPage.id === 'pageBooking' && pageName !== 'booking') {
-                resetForm();
+                try {
+                    resetForm();
+                } catch (e) {
+                    console.error('Error resetting form:', e);
+                }
             }
             
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
@@ -3590,32 +3761,36 @@
             if (targetPage) {
                 targetPage.classList.add('active');
                 window.scrollTo(0, 0);
-                // Update URL hash
-                history.pushState(null, '', pageName === 'home' ? '/' : '#' + pageName);
+                
+                // Update URL using History API (clean URLs, no hash)
+                if (pushState) {
+                    const url = pageName === 'home' ? '/' : '/' + pageName;
+                    history.pushState({ page: pageName }, '', url);
+                }
             }
         }
 
         function initPageRouting() {
-            // Check URL hash on load
-            const hash = window.location.hash.replace('#', '');
-            if (hash === 'booking') {
-                showPage('booking');
+            // Check URL path on load
+            const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
+            if (path === 'booking') {
+                showPage('booking', false);
             }
+
+            // Handle browser back/forward
+            window.addEventListener('popstate', (e) => {
+                if (e.state && e.state.page) {
+                    showPage(e.state.page, false);
+                } else {
+                    const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
+                    showPage(path === 'booking' ? 'booking' : 'home', false);
+                }
+            });
 
             // Start Booking button
             document.getElementById('startBookingBtn').addEventListener('click', (e) => {
                 e.preventDefault();
                 showPage('booking');
-            });
-
-            // Handle browser back/forward
-            window.addEventListener('popstate', () => {
-                const hash = window.location.hash.replace('#', '');
-                if (hash === 'booking') {
-                    showPage('booking');
-                } else {
-                    showPage('home');
-                }
             });
 
             // Logo click goes to home
@@ -3626,6 +3801,16 @@
 
             // Contact link - show footer and scroll to it
             document.getElementById('contactLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                const footer = document.getElementById('footer');
+                footer.classList.add('show');
+                setTimeout(() => {
+                    footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            });
+
+            // Mobile Contact button - same behavior
+            document.getElementById('mobileContactLink').addEventListener('click', (e) => {
                 e.preventDefault();
                 const footer = document.getElementById('footer');
                 footer.classList.add('show');
@@ -4135,7 +4320,26 @@
         // Navigation Handlers
         function initNavigationHandlers() {
             // Step 1 to 2
-            document.getElementById('toStep2').addEventListener('click', () => {
+            const toStep2Btn = document.getElementById('toStep2');
+            const toStep2Wrapper = document.getElementById('toStep2Wrapper');
+            
+            // Use wrapper to capture clicks even when button is disabled
+            toStep2Wrapper.addEventListener('click', () => {
+                // Check if button is disabled
+                if (toStep2Btn.disabled) {
+                    // Show appropriate error message
+                    if (selectedEvents.length === 0) {
+                        showToast('Please select at least one event to continue', 'error');
+                    } else {
+                        // Check which events are missing dates
+                        const eventsWithoutDates = selectedEvents.filter(slug => !eventDates[slug]);
+                        if (eventsWithoutDates.length > 0) {
+                            const eventNamesWithoutDates = eventsWithoutDates.map(slug => eventNames[slug] || slug).join(', ');
+                            showToast(`Please select dates for: ${eventNamesWithoutDates}`, 'error');
+                        }
+                    }
+                    return;
+                }
                 generateServicesForEvents();
                 goToStep(2);
             });
@@ -4197,8 +4401,47 @@
             });
 
             // Get Quote button in Step 2 floating card
-            document.getElementById('summaryGetQuote').addEventListener('click', async () => {
+            document.getElementById('summaryGetQuote').addEventListener('click', async (e) => {
+                const btn = e.currentTarget;
                 const email = document.getElementById('step2Email').value.trim();
+                
+                // Check all events have services selected
+                const allEventsHaveServices = selectedEvents.every(eventSlug => {
+                    const services = selectedServices[eventSlug] || [];
+                    return services.length > 0;
+                });
+                
+                // If button is disabled (validation failed), show appropriate error
+                // Priority: Event/Service selection > Email validation
+                if (btn.disabled) {
+                    if (!allEventsHaveServices) {
+                        // Find the first event without services and scroll to it
+                        const eventWithoutServices = selectedEvents.find(eventSlug => {
+                            const services = selectedServices[eventSlug] || [];
+                            return services.length === 0;
+                        });
+                        
+                        if (eventWithoutServices) {
+                            const eventBlock = document.querySelector(`.event-services-block[data-event="${eventWithoutServices}"]`);
+                            if (eventBlock) {
+                                eventBlock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                eventBlock.style.boxShadow = '0 0 0 3px var(--error)';
+                                setTimeout(() => {
+                                    eventBlock.style.boxShadow = '';
+                                }, 2000);
+                            }
+                        }
+                        showToast('Please select at least one service for each event', 'error');
+                    } else if (!isValidEmail(email)) {
+                        // Email error - scroll to email input
+                        document.getElementById('step2Email').classList.add('error');
+                        document.getElementById('step2EmailError').style.display = 'block';
+                        document.getElementById('step2Email').focus();
+                        document.getElementById('step2Email').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        showToast('Please enter a valid email address', 'error');
+                    }
+                    return;
+                }
                 
                 if (!isValidEmail(email)) {
                     document.getElementById('step2Email').classList.add('error');
@@ -4206,12 +4449,6 @@
                     document.getElementById('step2Email').focus();
                     return;
                 }
-                
-                // Check all events have services selected
-                const allEventsHaveServices = selectedEvents.every(eventSlug => {
-                    const services = selectedServices[eventSlug] || [];
-                    return services.length > 0;
-                });
                 
                 if (!allEventsHaveServices) {
                     showToast('Please select at least one service for each event', 'error');
@@ -4221,7 +4458,6 @@
                 // Store email in customerDetails
                 customerDetails.email = email;
                 
-                const btn = document.getElementById('summaryGetQuote');
                 const originalHTML = btn.innerHTML;
                 btn.disabled = true;
                 btn.innerHTML = `
@@ -4751,8 +4987,26 @@
             servicesPreview.innerHTML = html;
         }
 
+        // Get reCAPTCHA v3 token
+        async function getRecaptchaToken(action = 'submit_quote') {
+            try {
+                const token = await grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: action });
+                return token;
+            } catch (error) {
+                console.error('reCAPTCHA error:', error);
+                return null;
+            }
+        }
+
         // Submit quote to backend API
         async function submitQuote() {
+            // Get reCAPTCHA token
+            const recaptchaToken = await getRecaptchaToken('submit_quote');
+            if (!recaptchaToken) {
+                showToast('Security verification failed. Please try again.', 'error');
+                return null;
+            }
+
             const { items, additionalItems } = calculateTotals();
             
             // Build items array for API with event IDs and dates
@@ -4799,7 +5053,8 @@
                         customerEmail: customerDetails.email,
                         customerName: customerDetails.name || '',
                         items: apiItems,
-                        additionalServices: apiAdditionalServices
+                        additionalServices: apiAdditionalServices,
+                        recaptchaToken: recaptchaToken
                     })
                 });
 
@@ -5158,14 +5413,17 @@
             customerDetails = {};
             selectedAdditionalServices = {};
 
-            // Reset event cards
-            eventCards.forEach(card => {
-                card.classList.remove('selected');
-                card.classList.remove('has-date');
-                card.querySelector('input[type="checkbox"]').checked = false;
-                const dateDisplay = card.querySelector('.date-display');
-                if (dateDisplay) dateDisplay.textContent = '';
-            });
+            // Reset event cards (check if eventCards exists)
+            if (eventCards && eventCards.length > 0) {
+                eventCards.forEach(card => {
+                    card.classList.remove('selected');
+                    card.classList.remove('has-date');
+                    const checkbox = card.querySelector('input[type="checkbox"]');
+                    if (checkbox) checkbox.checked = false;
+                    const dateDisplay = card.querySelector('.date-display');
+                    if (dateDisplay) dateDisplay.textContent = '';
+                });
+            }
 
             // Reset addon items selection
             document.querySelectorAll('.addon-item').forEach(item => {
@@ -5177,7 +5435,8 @@
             if (step2EmailEl) step2EmailEl.value = '';
 
             // Reset buttons
-            document.getElementById('toStep2').disabled = true;
+            const toStep2Btn = document.getElementById('toStep2');
+            if (toStep2Btn) toStep2Btn.disabled = true;
             const summaryGetQuote = document.getElementById('summaryGetQuote');
             if (summaryGetQuote) summaryGetQuote.disabled = true;
 
