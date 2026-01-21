@@ -3747,8 +3747,8 @@
         const stepItems = document.querySelectorAll('.step-item');
         const formSections = document.querySelectorAll('.form-section');
 
-        // Page Routing
-        function showPage(pageName, pushState = true) {
+        // Page Routing (using hash-based routing for GitHub Pages compatibility)
+        function showPage(pageName, updateHash = true) {
             // Reset form when leaving booking page
             const currentPage = document.querySelector('.page.active');
             if (currentPage && currentPage.id === 'pageBooking' && pageName !== 'booking') {
@@ -3765,29 +3765,41 @@
                 targetPage.classList.add('active');
                 window.scrollTo(0, 0);
                 
-                // Update URL using History API (clean URLs, no hash)
-                if (pushState) {
-                    const url = pageName === 'home' ? '/' : '/' + pageName;
-                    history.pushState({ page: pageName }, '', url);
+                // Update URL using hash (GitHub Pages compatible)
+                if (updateHash) {
+                    const hash = pageName === 'home' ? '' : '#' + pageName;
+                    history.pushState({ page: pageName }, '', window.location.pathname + hash);
                 }
             }
         }
 
         function initPageRouting() {
-            // Check URL path on load
+            // Check URL hash on load (also handle old path-based URLs for backwards compatibility)
+            const hash = window.location.hash.replace(/^#/, '');
             const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
-            if (path === 'booking') {
+            
+            if (hash === 'booking' || path === 'booking') {
                 showPage('booking', false);
+                // If it was a path-based URL, update to hash-based
+                if (path === 'booking') {
+                    history.replaceState({ page: 'booking' }, '', '/#booking');
+                }
             }
 
-            // Handle browser back/forward
+            // Handle browser back/forward and hash changes
             window.addEventListener('popstate', (e) => {
                 if (e.state && e.state.page) {
                     showPage(e.state.page, false);
                 } else {
-                    const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
-                    showPage(path === 'booking' ? 'booking' : 'home', false);
+                    const hash = window.location.hash.replace(/^#/, '');
+                    showPage(hash === 'booking' ? 'booking' : 'home', false);
                 }
+            });
+            
+            // Also listen for hashchange events
+            window.addEventListener('hashchange', () => {
+                const hash = window.location.hash.replace(/^#/, '');
+                showPage(hash === 'booking' ? 'booking' : 'home', false);
             });
 
             // Start Booking button
